@@ -82,4 +82,3 @@ class Escenario {
     image(flor, mouse.x*0.9-1024, 300); // Flor
   }
 }
-

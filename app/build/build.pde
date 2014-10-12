@@ -1,5 +1,5 @@
 // MULTIVERSO
-// App 01
+// App v01: Simple parallax
 
 // Configuración
 boolean debug = true; // Debug
