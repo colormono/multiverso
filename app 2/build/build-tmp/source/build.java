@@ -30,6 +30,7 @@ int escenarioActual = 2; // Escenario inicial
 
 public void setup() {
   size(1024, 768, P3D);
+  frameRate(30);
   noStroke();
 
   // Arreglos
@@ -125,7 +126,7 @@ class Escenario {
   Objeto objetos[]; // Objetos
   int fade, fadeDuracion; // Fade
 
-  // Constructor simple
+  // Constructor
   Escenario( String _name ) {
     name = _name;
     estado = "esperando";
@@ -149,27 +150,27 @@ class Escenario {
     // Crear universo
     // Si name = "montana"...
     if( fade == 0 ){
-      // Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name );
-      Objeto o7 = new Objeto( 0, -125, 0.05f, 1365, 527, false, "cielo" );
+      // Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special );
+      Objeto o7 = new Objeto( 0, -125, 0.05f, 1365, 527, false, "cielo", 1, 0, 0, 0 );
       objetos = (Objeto[]) append(objetos, o7);
-      Objeto o8 = new Objeto( 0, -125, 0.1f, 1068, 119, false, "nubes" );
+      Objeto o8 = new Objeto( 0, -125, 0.1f, 1068, 119, false, "nubes", 1, 0, 0, 0 );
       objetos = (Objeto[]) append(objetos, o8);
-      Objeto o9 = new Objeto( 0, 100, 0.2f, 1498, 269, false, "montanas" );
+      Objeto o9 = new Objeto( 0, 100, 0.2f, 1498, 269, false, "montanas", 1, 0, 0, 0 );
       objetos = (Objeto[]) append(objetos, o9);
-      Objeto o10 = new Objeto( 0, 270, 0.4f, 2048, 281, false, "piso" );
+      Objeto o10 = new Objeto( 0, 270, 0.4f, 2048, 281, false, "piso", 1, 0, 0, 0 );
       objetos = (Objeto[]) append(objetos, o10);
 
-      Objeto o1 = new Objeto( -400, 120, 0.5f, 533, 233, true, "dragon" );
+      Objeto o1 = new Objeto( -400, 120, 0.5f, 533, 233, true, "dragon", 150, 25, 0, 0 );
       objetos = (Objeto[]) append(objetos, o1);
-      Objeto o2 = new Objeto( 400, 0, 0.3f, 102, 60, true, "peceschicos" );
+      Objeto o2 = new Objeto( 400, 0, 0.3f, 102, 60, true, "peceschicos", 1, 0, 0, 0 );
       objetos = (Objeto[]) append(objetos, o2);
-      Objeto o3 = new Objeto( -500, -100, 0.3f, 205, 120, true, "peces" );
+      Objeto o3 = new Objeto( -500, -100, 0.3f, 205, 120, true, "peces", 1, 0, 0, 0 );
       objetos = (Objeto[]) append(objetos, o3);
-      Objeto o4 = new Objeto( 900, 200, 0.6f, 168, 246, true, "hueco" );
+      Objeto o4 = new Objeto( 900, 200, 0.6f, 168, 246, true, "hueco", 1, 0, 0, 0 );
       objetos = (Objeto[]) append(objetos, o4);
-      Objeto o5 = new Objeto( 300, 180, 0.8f, 456, 480, true, "puerta" );
+      Objeto o5 = new Objeto( 300, 180, 0.8f, 456, 480, true, "puerta", 1, 0, 0, 0 );
       objetos = (Objeto[]) append(objetos, o5);
-      Objeto o6 = new Objeto( -1024, 300, 0.9f, 273, 98, true, "flor" );
+      Objeto o6 = new Objeto( -1024, 300, 0.9f, 273, 98, true, "flor", 1, 0, 0, 0 );
       objetos = (Objeto[]) append(objetos, o6);
     }
 
@@ -212,21 +213,33 @@ class Objeto {
 
   //.h
   PVector posicion; // Posici\u00f3n X, Y, Z
+  float x, y; // Posiciones absolutas
   int w, h; // Ancho y Alto
   boolean interactive; // Es interactivo?
   String name; // Nombre (ruta de carpeta)
-  String estado; // Estado inicial ["reposo","hover","playing"]
-  PImage [] animacion; // Animaciones
-  float x, y;
+  String estado; // Estados ["reposo","hover","playing","special"]
+  PImage [] reposo, hover, playing, special; // Animaciones
+  int framesReposo, framesHover, framesPlaying, framesSpecial; // Contador de frames
+  int frame; // Contador de frames
 
-  Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name ) {
+  // Constructor
+  Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special ) {
     posicion = new PVector( _x, _y, _z );
     w = _w;
     h = _h;
     interactive = _interactive;
     name = _name;
     estado = "reposo";
-    animacion = loadImages(escenarios[escenarioActual].name+"/"+name+"/", ".png", 1); // nombre, extenci\u00f3n, cantidad de frames
+    framesReposo  = _reposo;
+    framesHover = _hover;
+    framesPlaying = _playing;
+    framesSpecial = _special;
+    frame = 0;
+    // loadImages( String nombre, String extensi\u00f3n, int cantidad_de_frames );
+    reposo = loadImages(escenarios[escenarioActual].name+"/"+name+"/reposo_", ".png", _reposo);
+    hover = loadImages(escenarios[escenarioActual].name+"/"+name+"/hover_", ".png", _hover);
+    playing = loadImages(escenarios[escenarioActual].name+"/"+name+"/playing_", ".png", _playing);
+    special = loadImages(escenarios[escenarioActual].name+"/"+name+"/special_", ".png", _special);
   }
 
   // Actualizar
@@ -248,13 +261,18 @@ class Objeto {
         personajes[i].posicion.x >= x-w/2 && 
         personajes[i].posicion.x <= x+w/2 
       ) {
-        // Cambiar estado
         // Activar animaci\u00f3n
+        frame = 0;
+        // Cambiar estado
+        estado = "hover";
         // Disparar sonido
         if(debug){
           fill(0,0,255,100);
           rect(x, y, w, h);
         }
+      } else {
+        // Reiniciar estado
+        estado = "reposo";
       }
     }
   }
@@ -264,7 +282,23 @@ class Objeto {
     pushMatrix();
     translate(x, y); // 2D
     //translate(x, y, tracker.y); // 3D
-    image(animacion[0], 0, 0, w, h);
+    if( estado.equals("reposo") ){
+      if( frame < framesReposo ){
+        image(reposo[frame], 0, 0, w, h);
+        frame ++;
+      } else {
+        frame = 0;
+        image(reposo[frame], 0, 0, w, h);
+      }
+    } else if( estado.equals("hover") && hover.length>0 ){
+      if( frame < framesHover ){
+        image(hover[frame], 0, 0, w, h);
+        frame ++;
+      } else {
+        frame = 0;
+        image(hover[frame], 0, 0, w, h);
+      }
+    }
     popMatrix();
   }
 }
@@ -309,10 +343,11 @@ class Personaje {
 //The above copyright notice and this permission notice shall be included in\u2028all copies or substantial portions of the Software.
 //THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\u2028IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\u2028FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\u2028AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\u2028LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\u2028OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\u2028THE SOFTWARE.
 
-public PImage [] loadImages(String stub, String extension, int numImages) {
+public PImage [] loadImages(String name, String extension, int frames) {
   PImage [] images = new PImage[0];
-  for (int i =0; i < numImages; i++) {
-    PImage img = loadImage(stub+i+extension);
+  for ( int i=0; i < frames; i++ ) {
+    // Use nf() to number format 'i' into five digits
+    PImage img = loadImage(name+nf(i, 5)+extension);
     if (img != null) {
       images = (PImage [])append(images, img);
     } else {
@@ -321,7 +356,6 @@ public PImage [] loadImages(String stub, String extension, int numImages) {
   }
   return images;
 }
-
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "--full-screen", "--bgcolor=#FFFFFF", "--hide-stop", "build" };
     if (passedArgs != null) {

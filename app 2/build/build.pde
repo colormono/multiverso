@@ -14,6 +14,7 @@ int escenarioActual = 2; // Escenario inicial
 
 void setup() {
   size(1024, 768, P3D);
+  frameRate(30);
   noStroke();
 
   // Arreglos
