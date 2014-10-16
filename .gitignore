@@ -34,3 +34,4 @@ Thumbs.db
 # Ignore specific folders
 sketchs
 .tmp
+*/build/build-tmp

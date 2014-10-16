@@ -20,7 +20,6 @@ class Personaje {
 
   // Actualizar
   void update() {
-    // Actualizar posición
     posicion.x = mouseX;
     dibujar();
   }

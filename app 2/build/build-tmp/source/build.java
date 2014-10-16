@@ -51,8 +51,8 @@ public void setup() {
   // Escenario: Monta\u00f1a
   Escenario e3 = new Escenario( "montana" );
   escenarios = (Escenario[]) append(escenarios, e3);
-
 }
+
 
 public void draw() {
   // Limpiar fondo
@@ -237,19 +237,24 @@ class Objeto {
     dibujar();
 
     if( interactive ){
-      colision();
+      colisionar();
     }
   }
 
   // Detectar colisiones
-  public void colision() {
+  public void colisionar() {
     for(int i=0; i<personajes.length; i++ ){
       if( 
         personajes[i].posicion.x >= x-w/2 && 
         personajes[i].posicion.x <= x+w/2 
       ) {
-        fill(0,0,255,100);
-        rect(x, y, w, h);
+        // Cambiar estado
+        // Activar animaci\u00f3n
+        // Disparar sonido
+        if(debug){
+          fill(0,0,255,100);
+          rect(x, y, w, h);
+        }
       }
     }
   }
@@ -258,16 +263,9 @@ class Objeto {
   public void dibujar() {
     pushMatrix();
     translate(x, y); // 2D
-    //translate(width/2, height/2, tracker.y); // 3D
+    //translate(x, y, tracker.y); // 3D
     image(animacion[0], 0, 0, w, h);
-    if ( debug ) {
-      pushStyle();
-      fill(255);
-      text(x, 0, 0 );
-      popStyle();
-    }
     popMatrix();
-
   }
 }
 class Personaje {
@@ -292,7 +290,6 @@ class Personaje {
 
   // Actualizar
   public void update() {
-    // Actualizar posici\u00f3n
     posicion.x = mouseX;
     dibujar();
   }

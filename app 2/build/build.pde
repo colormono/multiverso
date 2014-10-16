@@ -35,8 +35,8 @@ void setup() {
   // Escenario: Montaña
   Escenario e3 = new Escenario( "montana" );
   escenarios = (Escenario[]) append(escenarios, e3);
-
 }
+
 
 void draw() {
   // Limpiar fondo
