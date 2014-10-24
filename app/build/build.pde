@@ -13,8 +13,8 @@ Escenario escenarios[]; // Escenarios
 Objeto objetos[]; // Objetos
 
 // Configuración
-boolean debug = true; // Debug
-boolean debugCamera = true; // Debug Camara
+boolean debug = false; // Debug
+boolean debugCamera = false; // Debug Camara
 boolean kinect = true; // Use kinect or mouse
 PVector tracker; // Tracking
 int personajeActual = 0; // Personaje inicial

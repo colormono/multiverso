@@ -59,7 +59,7 @@ void dibujarCabeza( int userId, float _y ) {
   if( userId == 1 ){
     image(p1cabeza, cabeza_2d.x, _y-145);
   }  else if ( userId == 2 ){
-    image(p2cabeza, cabeza_2d.x, _y-145);
+    image(p2cabeza, cabeza_2d.x, _y-125);
   }
 }
 

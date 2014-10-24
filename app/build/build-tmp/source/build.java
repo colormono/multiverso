@@ -31,8 +31,8 @@ Escenario escenarios[]; // Escenarios
 Objeto objetos[]; // Objetos
 
 // Configuraci\u00f3n
-boolean debug = true; // Debug
-boolean debugCamera = true; // Debug Camara
+boolean debug = false; // Debug
+boolean debugCamera = false; // Debug Camara
 boolean kinect = true; // Use kinect or mouse
 PVector tracker; // Tracking
 int personajeActual = 0; // Personaje inicial
@@ -252,15 +252,15 @@ class Escenario {
 
       Objeto o1 = new Objeto( -400, 120, 0.5f, 533, 233, true, "dragon", 150, 25, 0, 0 );
       objetos = (Objeto[]) append(objetos, o1);
-      Objeto o2 = new Objeto( 400, 0, 0.3f, 102, 60, true, "peceschicos", 1, 0, 0, 0 );
+      Objeto o2 = new Objeto( 400, 0, 0.3f, 102, 60, true, "peceschicos", 1, 1, 0, 0 );
       objetos = (Objeto[]) append(objetos, o2);
-      Objeto o3 = new Objeto( -500, -100, 0.3f, 205, 120, true, "peces", 1, 0, 0, 0 );
+      Objeto o3 = new Objeto( -500, -100, 0.3f, 205, 120, true, "peces", 1, 1, 0, 0 );
       objetos = (Objeto[]) append(objetos, o3);
-      Objeto o4 = new Objeto( 900, 200, 0.6f, 168, 246, true, "hueco", 1, 0, 0, 0 );
+      Objeto o4 = new Objeto( 900, 200, 0.6f, 168, 246, true, "hueco", 1, 1, 0, 0 );
       objetos = (Objeto[]) append(objetos, o4);
-      Objeto o5 = new Objeto( 300, 180, 0.8f, 456, 480, true, "puerta", 1, 0, 0, 0 );
+      Objeto o5 = new Objeto( 300, 180, 0.8f, 456, 480, true, "puerta", 1, 1, 0, 0 );
       objetos = (Objeto[]) append(objetos, o5);
-      Objeto o6 = new Objeto( -1024, 300, 0.9f, 273, 98, true, "flor", 1, 0, 0, 0 );
+      Objeto o6 = new Objeto( -1024, 300, 0.9f, 273, 98, true, "flor", 1, 1, 0, 0 );
       objetos = (Objeto[]) append(objetos, o6);
     }
 
@@ -360,7 +360,7 @@ public void dibujarCabeza( int userId, float _y ) {
   if( userId == 1 ){
     image(p1cabeza, cabeza_2d.x, _y-145);
   }  else if ( userId == 2 ){
-    image(p2cabeza, cabeza_2d.x, _y-145);
+    image(p2cabeza, cabeza_2d.x, _y-125);
   }
 }
 
