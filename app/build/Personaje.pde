@@ -25,12 +25,18 @@ class Personaje {
     //dibujar();
   }
 
+  // Actualizar Mouse
+  void update() {
+    posicion.x = mouseX;
+    dibujar();
+  }
+
   // Esperando
   void esperar() {
   }
 
   // Dibujar
   void dibujar() {
-    //image(animacion[0], posicion.x, posicion.y);
+    image(animacion[0], posicion.x, posicion.y);
   }
 }

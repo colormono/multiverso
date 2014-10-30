@@ -4,6 +4,8 @@ import processing.event.*;
 import processing.opengl.*; 
 
 import SimpleOpenNI.*; 
+import oscP5.*; 
+import netP5.*; 
 
 import java.util.HashMap; 
 import java.util.ArrayList; 
@@ -25,14 +27,22 @@ public class build extends PApplet {
 
 SimpleOpenNI context;
 
+// OSC
+
+
+
 // Objetos
 Personaje personajes[]; // Personajes
 Escenario escenarios[]; // Escenarios
 Objeto objetos[]; // Objetos
+OscP5 oscP5; // Objeto OSC
+NetAddress direccionRemota; // Direcci\u00f3n remota
+int puerto; // Puerto de salida OSC 
 
 // Configuraci\u00f3n
 boolean debug = true; // Debug
 boolean debugCamera = true; // Debug Camara
+boolean kinect = false; // Using kinect
 PVector tracker; // Tracking
 int personajeActual = 0; // Personaje inicial
 int escenarioActual = 2; // Escenario inicial
@@ -42,9 +52,6 @@ boolean iniciar = false; // Bot\u00f3n para iniciar (temporal)
 PImage p1cabeza, p1cuerpo, p1manod, p1manoi;
 PImage p2cabeza, p2cuerpo, p2manod, p2manoi;
 
-PVector last_vector = new PVector();
-PVector user_velocity = new PVector();
-
 //---------------------------------------------------------------
 
 public void setup() {
@@ -52,6 +59,16 @@ public void setup() {
   size(1024, 768, OPENGL);
   //frameRate(30);
   noStroke();
+
+  // OSC
+  puerto = 11112;
+  oscP5 = new OscP5(this, puerto);
+  direccionRemota = new NetAddress("127.0.0.1", puerto);
+
+  // Iniciar sonido ambiente
+  OscMessage _audio = new OscMessage("/audio");
+  _audio.add(1);
+  oscP5.send(_audio, direccionRemota);
 
   // Arreglos
   personajes = new Personaje[0];
@@ -61,33 +78,53 @@ public void setup() {
   Personaje p1 = new Personaje( 0, 600, mouseY, 235, 240, true, "pepe" );
   personajes = (Personaje[]) append(personajes, p1);
 
+  // LLenar Universos de Objetos
+  // Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special );
+
   // Escenario: Introducci\u00f3n
   Escenario e1 = new Escenario( "intro" );
   escenarios = (Escenario[]) append(escenarios, e1);
+  //escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0 ));
 
   // Escenario: S\u00f3tano
   Escenario e2 = new Escenario( "sotano" );
   escenarios = (Escenario[]) append(escenarios, e2);
+  //escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0 ));
 
   // Escenario: Monta\u00f1a
   Escenario e3 = new Escenario( "montana" );
   escenarios = (Escenario[]) append(escenarios, e3);
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, -125, 0.05f, 1365, 527, false, "cielo", 1, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, -125, 0.1f, 1068, 119, false, "nubes", 1, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, 100, 0.2f, 1498, 269, false, "montanas", 1, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, 270, 0.4f, 2048, 281, false, "piso", 1, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -400, 120, 0.5f, 533, 233, true, "dragon", 50, 25, 25, 25 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 400, 0, 0.3f, 102, 60, true, "peceschicos", 1, 1, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -500, -100, 0.3f, 205, 120, true, "peces", 1, 1, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 900, 200, 0.6f, 168, 246, true, "hueco", 1, 50, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 300, 180, 0.8f, 456, 480, true, "puerta", 1, 1, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -1024, 300, 0.9f, 273, 98, true, "flor", 1, 1, 0, 0 ));
 
-  // Inicializar un nuevo objeto contexto
-  context = new SimpleOpenNI(this);
+  // Si se est\u00e1 utilizando la Kinect
+  if ( kinect ) {
 
-  // Habilitar la carga de imagen de profundidad 
-  context.enableDepth();
+    // Inicializar un nuevo objeto contexto
+    context = new SimpleOpenNI(this);
 
-  // Habilitar detecci\u00f3n de esqueleto para todas las juntas
-  context.enableUser();
-  context.setMirror(true);
+    // Habilitar la carga de imagen de profundidad 
+    context.enableDepth();
 
-  // Test Kinect
-  if( context.isInit() == false ){
-    println("La c\u00e1mara Kinect se encuentra conectada?");
-    exit();
-    return;
+    // Habilitar detecci\u00f3n de esqueleto para todas las juntas
+    context.enableUser();
+    context.setMirror(true);
+
+    // Test Kinect
+    if( context.isInit() == false ){
+      println("La c\u00e1mara Kinect se encuentra conectada?");
+      exit();
+      return;
+    }
+
   }
   tracker = new PVector( 0, 0 );
 
@@ -106,20 +143,26 @@ public void setup() {
 //---------------------------------------------------------------
 
 public void draw() {
+
   // Limpiar fondo
   background(100);
   rectMode(CENTER);
   imageMode(CENTER);
 
-  // Actualizar imagen de c\u00e1mara
-  context.update();
-
   // Tracker
   float _xt, _yt;
-  _xt = personajes[personajeActual].posicion.x;
-  _yt = personajes[personajeActual].posicion.y;
-  tracker.x = map( _xt, 0, 600, width, -width );
-  tracker.y = map( _yt, 0, height, 0, 10 );
+  if ( kinect ) {
+    context.update(); // Actualizar imagen de c\u00e1mara
+    _xt = personajes[personajeActual].posicion.x;
+    _yt = personajes[personajeActual].posicion.y;
+    tracker.x = map( _xt, 0, 600, width, -width );
+    tracker.y = map( _yt, 0, height, 0, 10 );
+  } else {
+    _xt = mouseX;
+    _yt = mouseY;
+    tracker.x = map( _xt, 0, width, width, -width );
+    tracker.y = map( _yt, 0, height, 0, 10 );
+  }
 
   // Escenario: Esperando
   // Si detecta un usuario, enciende la aplicaci\u00f3n
@@ -140,47 +183,32 @@ public void draw() {
     // Escenario
     escenarios[escenarioActual].dibujar();
     
-    // Detectar jugadores
-    int [] userList = context.getUsers();
-    for ( int i=0; i<userList.length; i++ ) {
-      // Consultar si el esqueleto existe
-      if (context.isTrackingSkeleton(userList[i])) {
+    if ( kinect ) {
+      // Detectar jugadores
+      int [] userList = context.getUsers();
+      for ( int i=0; i<userList.length; i++ ) {
+        // Consultar si el esqueleto existe
+        if (context.isTrackingSkeleton(userList[i])) {
 
-        // Punto central
-        PVector cuerpo = new PVector();
-        context.getJointPositionSkeleton( userList[i], SimpleOpenNI.SKEL_TORSO, cuerpo );
-        PVector cuerpo_2d = new PVector(); 
-        context.convertRealWorldToProjective(cuerpo, cuerpo_2d);
+          // Punto central
+          PVector cuerpo = new PVector();
+          context.getJointPositionSkeleton( userList[i], SimpleOpenNI.SKEL_TORSO, cuerpo );
+          PVector cuerpo_2d = new PVector(); 
+          context.convertRealWorldToProjective(cuerpo, cuerpo_2d);
 
-        // Dibujar
-        //drawSkeleton( userList[i] );
-        dibujarCuerpo( userList[i], personajes[personajeActual].posicion.y );
-        dibujarCabeza( userList[i], personajes[personajeActual].posicion.y );
-        dibujarManoIzquierda( userList[i], personajes[personajeActual].posicion.y );
-        dibujarManoDerecha( userList[i], personajes[personajeActual].posicion.y );
+          // Dibujar
+          //drawSkeleton( userList[i] );
+          dibujarCuerpo( userList[i], personajes[personajeActual].posicion.y );
+          dibujarCabeza( userList[i], personajes[personajeActual].posicion.y );
+          dibujarManoIzquierda( userList[i], personajes[personajeActual].posicion.y );
+          dibujarManoDerecha( userList[i], personajes[personajeActual].posicion.y );
 
-        //personajes[personajeActual].update(); // Players
-        personajes[personajeActual].update(cuerpo_2d.x);
+          //personajes[personajeActual].update(); // Players
+          personajes[personajeActual].update(cuerpo_2d.x);
+        }
       }
-
-      PVector world_pos = new PVector();
-      PVector proj_pos = new PVector();
-      context.getCoM(userList[i], world_pos);
-      context.convertRealWorldToProjective(world_pos, proj_pos);
-      
-      user_velocity.x = proj_pos.x - last_vector.x;
-      user_velocity.y = proj_pos.y - last_vector.y;
-      
-      pushMatrix();
-      translate(proj_pos.x, proj_pos.y, 0);
-      fill(255, 0, 100);
-      ellipse(0, 0, 20, 20);
-      fill(255);
-      text(userList[i], 0, 0);
-      popMatrix();
-      
-      last_vector = proj_pos;
-    
+    } else {
+      personajes[personajeActual].update(); // Players
     }
 
     // Fade
@@ -194,7 +222,7 @@ public void draw() {
   }
 
   // Im\u00e1gen de c\u00e1mara
-  if ( debugCamera ) {
+  if ( debugCamera && kinect ) {
     image(context.userImage(), width-160, 120, 320, 240);
   }
 
@@ -219,6 +247,7 @@ public void keyPressed() {
   // Debug
   if (key == 'd' || key == 'D') debug = !debug;
   if (key == 'c' || key == 'C') debugCamera = !debugCamera;
+  if (key == 's' || key == 'S') iniciar = true;
 
   // Controlar secuencias
   if (key == '1') escenarioActual = 0;
@@ -253,23 +282,6 @@ class Escenario {
 
   // Encender
   public void encender() {
-
-    // Crear universo
-    // Si name = "montana"...
-    if( fade == 0 ){
-      // Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special );
-      objetos = (Objeto[]) append(objetos, new Objeto( 0, -125, 0.05f, 1365, 527, false, "cielo", 1, 0, 0, 0 ));
-      objetos = (Objeto[]) append(objetos, new Objeto( 0, -125, 0.1f, 1068, 119, false, "nubes", 1, 0, 0, 0 ));
-      objetos = (Objeto[]) append(objetos, new Objeto( 0, 100, 0.2f, 1498, 269, false, "montanas", 1, 0, 0, 0 ));
-      objetos = (Objeto[]) append(objetos, new Objeto( 0, 270, 0.4f, 2048, 281, false, "piso", 1, 0, 0, 0 ));
-      objetos = (Objeto[]) append(objetos, new Objeto( -400, 120, 0.5f, 533, 233, true, "dragon", 50, 25, 25, 25 ));
-      objetos = (Objeto[]) append(objetos, new Objeto( 400, 0, 0.3f, 102, 60, true, "peceschicos", 1, 1, 0, 0 ));
-      objetos = (Objeto[]) append(objetos, new Objeto( -500, -100, 0.3f, 205, 120, true, "peces", 1, 1, 0, 0 ));
-      objetos = (Objeto[]) append(objetos, new Objeto( 900, 200, 0.6f, 168, 246, true, "hueco", 1, 1, 0, 0 ));
-      objetos = (Objeto[]) append(objetos, new Objeto( 300, 180, 0.8f, 456, 480, true, "puerta", 1, 1, 0, 0 ));
-      objetos = (Objeto[]) append(objetos, new Objeto( -1024, 300, 0.9f, 273, 98, true, "flor", 1, 1, 0, 0 ));
-    }
-
     // fadeIn Blanco
     if ( fade < fadeDuracion ) {
       float _fade = map(fade, 0, fadeDuracion, 0, 255);
@@ -559,13 +571,19 @@ class Personaje {
     //dibujar();
   }
 
+  // Actualizar Mouse
+  public void update() {
+    posicion.x = mouseX;
+    dibujar();
+  }
+
   // Esperando
   public void esperar() {
   }
 
   // Dibujar
   public void dibujar() {
-    //image(animacion[0], posicion.x, posicion.y);
+    image(animacion[0], posicion.x, posicion.y);
   }
 }
 //The MIT License (MIT)
