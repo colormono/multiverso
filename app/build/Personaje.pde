@@ -18,11 +18,9 @@ class Personaje {
     animacion = loadImages(name+"/", ".png", 2); // nombre, extención, cantidad de frames
   }
 
-  // Actualizar
+  // Actualizar Kinect
   void update(float _x) {
     posicion.x = _x;
-    //posicion.x = mouseX;
-    //dibujar();
   }
 
   // Actualizar Mouse

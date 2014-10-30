@@ -39,9 +39,9 @@ void dibujarCuerpo( int userId, float _y ) {
   context.convertRealWorldToProjective(cuerpo, cuerpo_2d);
   // Dibujar
   if( userId == 1 ){
-    image(p1cuerpo, cuerpo_2d.x, cuerpo_2d.y);
+    image(p1cuerpo, cuerpo_2d.x, _y);
   }  else if ( userId == 2 ){
-    image(p2cuerpo, cuerpo_2d.x, cuerpo_2d.y);
+    image(p2cuerpo, cuerpo_2d.x, _y);
   }
 }
 
@@ -91,8 +91,8 @@ void dibujarManoDerecha( int userId, float _y ) {
   // Crear un vector para obtener la posición
   PVector manoDerecha = new PVector();
   PVector hombroDerecho = new PVector();
-  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_LEFT_HAND, manoDerecha );
-  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_LEFT_SHOULDER, hombroDerecho );
+  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_RIGHT_HAND, manoDerecha );
+  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_RIGHT_SHOULDER, hombroDerecho );
   // Crear un vector para proyectar en 2D
   PVector manoDerecha_2d = new PVector(); 
   PVector hombroDerecho_2d = new PVector(); 

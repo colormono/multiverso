@@ -1,6 +1,5 @@
 // MULTIVERSO
 // App v04: Animaciones al pasar sobre
-
 //---------------------------------------------------------------
 
 // Kinect
@@ -19,16 +18,19 @@ OscP5 oscP5; // Objeto OSC
 NetAddress direccionRemota; // Dirección remota
 int puerto; // Puerto de salida OSC 
 
+boolean llave = false; // Llave para pasar de nivel
+boolean pasarNivel = false; // Llave para pasar de nivel
+
 // Configuración
-boolean debug = true; // Debug
-boolean debugCamera = true; // Debug Camara
+boolean debug = false; // Debug
+boolean debugCamera = false; // Debug Camara
 boolean kinect = false; // Using kinect
 PVector tracker; // Tracking
 int personajeActual = 0; // Personaje inicial
 int escenarioActual = 2; // Escenario inicial
 boolean iniciar = false; // Botón para iniciar (temporal)
 
-// Imagenes temp kinect
+// Imagenes
 PImage p1cabeza, p1cuerpo, p1manod, p1manoi;
 PImage p2cabeza, p2cuerpo, p2manod, p2manoi;
 
@@ -37,7 +39,6 @@ PImage p2cabeza, p2cuerpo, p2manod, p2manoi;
 void setup() {
   // Lienzo
   size(1024, 768, OPENGL);
-  //frameRate(30);
   noStroke();
 
   // OSC
@@ -45,21 +46,23 @@ void setup() {
   oscP5 = new OscP5(this, puerto);
   direccionRemota = new NetAddress("127.0.0.1", puerto);
 
-  // Iniciar sonido ambiente
-  OscMessage _audio = new OscMessage("/audio");
-  _audio.add(1);
-  oscP5.send(_audio, direccionRemota);
-
-  // Arreglos
-  personajes = new Personaje[0];
-  escenarios = new Escenario[0];
-
+  // Crear Personajes
   // Personaje ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name );
+  personajes = new Personaje[0];
   Personaje p1 = new Personaje( 0, 600, mouseY, 235, 240, true, "pepe" );
   personajes = (Personaje[]) append(personajes, p1);
+  p1cabeza = loadImage("p1-cabeza.png");
+  p1cuerpo = loadImage("p1-cuerpo.png");
+  p1manod = loadImage("p1-mano-d.png");
+  p1manoi = loadImage("p1-mano-i.png");
+  p2cabeza = loadImage("p2-cabeza.png");
+  p2cuerpo = loadImage("p2-cuerpo.png");
+  p2manod = loadImage("p2-mano-d.png");
+  p2manoi = loadImage("p2-mano-i.png");
 
-  // LLenar Universos de Objetos
-  // Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special );
+  // Crear Universos de Objetos
+  // Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special, int _sonido );
+  escenarios = new Escenario[0];
 
   // Escenario: Introducción
   Escenario e1 = new Escenario( "intro" );
@@ -74,16 +77,21 @@ void setup() {
   // Escenario: Montaña
   Escenario e3 = new Escenario( "montana" );
   escenarios = (Escenario[]) append(escenarios, e3);
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, -125, 0.1, 1068, 119, false, "nubes", 1, 0, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, 100, 0.2, 1498, 269, false, "montanas", 1, 0, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, 270, 0.4, 2048, 281, false, "piso", 1, 0, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -400, 120, 0.5, 533, 233, true, "dragon", 50, 25, 25, 25 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 400, 0, 0.3, 102, 60, true, "peceschicos", 1, 1, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -500, -100, 0.3, 205, 120, true, "peces", 1, 1, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 900, 200, 0.6, 168, 246, true, "hueco", 1, 50, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 300, 180, 0.8, 456, 480, true, "puerta", 1, 1, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -1024, 300, 0.9, 273, 98, true, "flor", 1, 1, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, -125, 0.1, 1068, 119, false, "nubes", 1, 0, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, 100, 0.2, 1498, 269, false, "montanas", 1, 0, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, 270, 0.4, 2048, 281, false, "piso", 1, 0, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -400, 120, 0.5, 533, 233, true, "dragon", 50, 25, 25, 25, 4 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 400, 0, 0.3, 102, 60, true, "peceschicos", 1, 1, 0, 0, 2 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -500, -100, 0.3, 205, 120, true, "peces", 1, 1, 0, 0, 2 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 900, 200, 0.6, 168, 246, true, "hueco", 1, 50, 0, 0, 8 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 300, 180, 0.8, 456, 480, true, "puerta", 1, 1, 0, 0, 5 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -1024, 300, 0.9, 273, 98, true, "flor", 1, 1, 0, 0, 9 ));
+  // Iniciar sonido ambiente
+  OscMessage _audio = new OscMessage("/audio");
+  _audio.add(1);
+  oscP5.send(_audio, direccionRemota);
+
 
   // Si se está utilizando la Kinect
   if ( kinect ) {
@@ -96,7 +104,7 @@ void setup() {
 
     // Habilitar detección de esqueleto para todas las juntas
     context.enableUser();
-    context.setMirror(true);
+    context.setMirror(false);
 
     // Test Kinect
     if( context.isInit() == false ){
@@ -107,17 +115,6 @@ void setup() {
 
   }
   tracker = new PVector( 0, 0 );
-
-  // Imagenes temp kinect  
-  p1cabeza = loadImage("p1-cabeza.png");
-  p1cuerpo = loadImage("p1-cuerpo.png");
-  p1manod = loadImage("p1-mano-d.png");
-  p1manoi = loadImage("p1-mano-i.png");
-  
-  p2cabeza = loadImage("p2-cabeza.png");
-  p2cuerpo = loadImage("p2-cuerpo.png");
-  p2manod = loadImage("p2-mano-d.png");
-  p2manoi = loadImage("p2-mano-i.png");
 }
 
 //---------------------------------------------------------------
@@ -125,7 +122,7 @@ void setup() {
 void draw() {
 
   // Limpiar fondo
-  background(100);
+  background(0);
   rectMode(CENTER);
   imageMode(CENTER);
 
@@ -170,6 +167,8 @@ void draw() {
         // Consultar si el esqueleto existe
         if (context.isTrackingSkeleton(userList[i])) {
 
+          // Probar con translate?
+
           // Punto central
           PVector cuerpo = new PVector();
           context.getJointPositionSkeleton( userList[i], SimpleOpenNI.SKEL_TORSO, cuerpo );
@@ -208,7 +207,6 @@ void draw() {
 
   // Mostrar información para debug
   if ( debug ) {
-    // Información relativa
     pushStyle();
     rectMode(CORNER);
     fill(0, 200);
