@@ -17,7 +17,7 @@ import java.io.IOException;
 public class build extends PApplet {
 
 // MULTIVERSO
-// App v03: Personajes con Kinect
+// App v04: Animaciones al pasar sobre
 
 //---------------------------------------------------------------
 
@@ -31,9 +31,8 @@ Escenario escenarios[]; // Escenarios
 Objeto objetos[]; // Objetos
 
 // Configuraci\u00f3n
-boolean debug = false; // Debug
-boolean debugCamera = false; // Debug Camara
-boolean kinect = true; // Use kinect or mouse
+boolean debug = true; // Debug
+boolean debugCamera = true; // Debug Camara
 PVector tracker; // Tracking
 int personajeActual = 0; // Personaje inicial
 int escenarioActual = 2; // Escenario inicial
@@ -43,11 +42,14 @@ boolean iniciar = false; // Bot\u00f3n para iniciar (temporal)
 PImage p1cabeza, p1cuerpo, p1manod, p1manoi;
 PImage p2cabeza, p2cuerpo, p2manod, p2manoi;
 
+PVector last_vector = new PVector();
+PVector user_velocity = new PVector();
+
 //---------------------------------------------------------------
 
 public void setup() {
   // Lienzo
-  size(1024, 768, P3D);
+  size(1024, 768, OPENGL);
   //frameRate(30);
   noStroke();
 
@@ -79,6 +81,7 @@ public void setup() {
 
   // Habilitar detecci\u00f3n de esqueleto para todas las juntas
   context.enableUser();
+  context.setMirror(true);
 
   // Test Kinect
   if( context.isInit() == false ){
@@ -113,14 +116,9 @@ public void draw() {
 
   // Tracker
   float _xt, _yt;
-  if ( kinect ) {
-    _xt = personajes[personajeActual].posicion.x;
-    _yt = personajes[personajeActual].posicion.y;
-  } else {
-    _xt = mouseX;
-    _yt = mouseY;
-  }
-  tracker.x = map( _xt, 0, width, width, -width );
+  _xt = personajes[personajeActual].posicion.x;
+  _yt = personajes[personajeActual].posicion.y;
+  tracker.x = map( _xt, 0, 600, width, -width );
   tracker.y = map( _yt, 0, height, 0, 10 );
 
   // Escenario: Esperando
@@ -155,6 +153,7 @@ public void draw() {
         context.convertRealWorldToProjective(cuerpo, cuerpo_2d);
 
         // Dibujar
+        //drawSkeleton( userList[i] );
         dibujarCuerpo( userList[i], personajes[personajeActual].posicion.y );
         dibujarCabeza( userList[i], personajes[personajeActual].posicion.y );
         dibujarManoIzquierda( userList[i], personajes[personajeActual].posicion.y );
@@ -163,6 +162,25 @@ public void draw() {
         //personajes[personajeActual].update(); // Players
         personajes[personajeActual].update(cuerpo_2d.x);
       }
+
+      PVector world_pos = new PVector();
+      PVector proj_pos = new PVector();
+      context.getCoM(userList[i], world_pos);
+      context.convertRealWorldToProjective(world_pos, proj_pos);
+      
+      user_velocity.x = proj_pos.x - last_vector.x;
+      user_velocity.y = proj_pos.y - last_vector.y;
+      
+      pushMatrix();
+      translate(proj_pos.x, proj_pos.y, 0);
+      fill(255, 0, 100);
+      ellipse(0, 0, 20, 20);
+      fill(255);
+      text(userList[i], 0, 0);
+      popMatrix();
+      
+      last_vector = proj_pos;
+    
     }
 
     // Fade
@@ -201,7 +219,6 @@ public void keyPressed() {
   // Debug
   if (key == 'd' || key == 'D') debug = !debug;
   if (key == 'c' || key == 'C') debugCamera = !debugCamera;
-  if (key == 'k' || key == 'K') kinect = !kinect;
 
   // Controlar secuencias
   if (key == '1') escenarioActual = 0;
@@ -241,27 +258,16 @@ class Escenario {
     // Si name = "montana"...
     if( fade == 0 ){
       // Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special );
-      Objeto o7 = new Objeto( 0, -125, 0.05f, 1365, 527, false, "cielo", 1, 0, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o7);
-      Objeto o8 = new Objeto( 0, -125, 0.1f, 1068, 119, false, "nubes", 1, 0, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o8);
-      Objeto o9 = new Objeto( 0, 100, 0.2f, 1498, 269, false, "montanas", 1, 0, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o9);
-      Objeto o10 = new Objeto( 0, 270, 0.4f, 2048, 281, false, "piso", 1, 0, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o10);
-
-      Objeto o1 = new Objeto( -400, 120, 0.5f, 533, 233, true, "dragon", 150, 25, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o1);
-      Objeto o2 = new Objeto( 400, 0, 0.3f, 102, 60, true, "peceschicos", 1, 1, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o2);
-      Objeto o3 = new Objeto( -500, -100, 0.3f, 205, 120, true, "peces", 1, 1, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o3);
-      Objeto o4 = new Objeto( 900, 200, 0.6f, 168, 246, true, "hueco", 1, 1, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o4);
-      Objeto o5 = new Objeto( 300, 180, 0.8f, 456, 480, true, "puerta", 1, 1, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o5);
-      Objeto o6 = new Objeto( -1024, 300, 0.9f, 273, 98, true, "flor", 1, 1, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o6);
+      objetos = (Objeto[]) append(objetos, new Objeto( 0, -125, 0.05f, 1365, 527, false, "cielo", 1, 0, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 0, -125, 0.1f, 1068, 119, false, "nubes", 1, 0, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 0, 100, 0.2f, 1498, 269, false, "montanas", 1, 0, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 0, 270, 0.4f, 2048, 281, false, "piso", 1, 0, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( -400, 120, 0.5f, 533, 233, true, "dragon", 50, 25, 25, 25 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 400, 0, 0.3f, 102, 60, true, "peceschicos", 1, 1, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( -500, -100, 0.3f, 205, 120, true, "peces", 1, 1, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 900, 200, 0.6f, 168, 246, true, "hueco", 1, 1, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 300, 180, 0.8f, 456, 480, true, "puerta", 1, 1, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( -1024, 300, 0.9f, 273, 98, true, "flor", 1, 1, 0, 0 ));
     }
 
     // fadeIn Blanco
@@ -340,9 +346,9 @@ public void dibujarCuerpo( int userId, float _y ) {
   context.convertRealWorldToProjective(cuerpo, cuerpo_2d);
   // Dibujar
   if( userId == 1 ){
-    image(p1cuerpo, cuerpo_2d.x, _y);
+    image(p1cuerpo, cuerpo_2d.x, cuerpo_2d.y);
   }  else if ( userId == 2 ){
-    image(p2cuerpo, cuerpo_2d.x, _y);
+    image(p2cuerpo, cuerpo_2d.x, cuerpo_2d.y);
   }
 }
 
@@ -459,6 +465,7 @@ class Objeto {
     framesPlaying = _playing;
     framesSpecial = _special;
     frame = 0;
+
     // loadImages( String nombre, String extensi\u00f3n, int cantidad_de_frames );
     reposo = loadImages(escenarios[escenarioActual].name+"/"+name+"/reposo_", ".png", _reposo);
     hover = loadImages(escenarios[escenarioActual].name+"/"+name+"/hover_", ".png", _hover);
@@ -485,8 +492,6 @@ class Objeto {
         personajes[i].posicion.x >= x-w/2 && 
         personajes[i].posicion.x <= x+w/2 
       ) {
-        // Activar animaci\u00f3n
-        frame = 0;
         // Cambiar estado
         estado = "hover";
         // Disparar sonido
@@ -514,7 +519,8 @@ class Objeto {
         frame = 0;
         image(reposo[frame], 0, 0, w, h);
       }
-    } else if( estado.equals("hover") && hover.length>0 ){
+    } 
+    else if( estado.equals("hover") && hover.length>0 ){
       if( frame < framesHover ){
         image(hover[frame], 0, 0, w, h);
         frame ++;

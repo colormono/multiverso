@@ -1,5 +1,5 @@
 // MULTIVERSO
-// App v03: Personajes con Kinect
+// App v04: Animaciones al pasar sobre
 
 //---------------------------------------------------------------
 
@@ -13,9 +13,8 @@ Escenario escenarios[]; // Escenarios
 Objeto objetos[]; // Objetos
 
 // Configuración
-boolean debug = false; // Debug
-boolean debugCamera = false; // Debug Camara
-boolean kinect = true; // Use kinect or mouse
+boolean debug = true; // Debug
+boolean debugCamera = true; // Debug Camara
 PVector tracker; // Tracking
 int personajeActual = 0; // Personaje inicial
 int escenarioActual = 2; // Escenario inicial
@@ -29,7 +28,7 @@ PImage p2cabeza, p2cuerpo, p2manod, p2manoi;
 
 void setup() {
   // Lienzo
-  size(1024, 768, P3D);
+  size(1024, 768, OPENGL);
   //frameRate(30);
   noStroke();
 
@@ -61,6 +60,7 @@ void setup() {
 
   // Habilitar detección de esqueleto para todas las juntas
   context.enableUser();
+  context.setMirror(true);
 
   // Test Kinect
   if( context.isInit() == false ){
@@ -95,14 +95,9 @@ void draw() {
 
   // Tracker
   float _xt, _yt;
-  if ( kinect ) {
-    _xt = personajes[personajeActual].posicion.x;
-    _yt = personajes[personajeActual].posicion.y;
-  } else {
-    _xt = mouseX;
-    _yt = mouseY;
-  }
-  tracker.x = map( _xt, 0, width, width, -width );
+  _xt = personajes[personajeActual].posicion.x;
+  _yt = personajes[personajeActual].posicion.y;
+  tracker.x = map( _xt, 0, 600, width, -width );
   tracker.y = map( _yt, 0, height, 0, 10 );
 
   // Escenario: Esperando
@@ -137,6 +132,7 @@ void draw() {
         context.convertRealWorldToProjective(cuerpo, cuerpo_2d);
 
         // Dibujar
+        //drawSkeleton( userList[i] );
         dibujarCuerpo( userList[i], personajes[personajeActual].posicion.y );
         dibujarCabeza( userList[i], personajes[personajeActual].posicion.y );
         dibujarManoIzquierda( userList[i], personajes[personajeActual].posicion.y );
@@ -183,7 +179,6 @@ void keyPressed() {
   // Debug
   if (key == 'd' || key == 'D') debug = !debug;
   if (key == 'c' || key == 'C') debugCamera = !debugCamera;
-  if (key == 'k' || key == 'K') kinect = !kinect;
 
   // Controlar secuencias
   if (key == '1') escenarioActual = 0;

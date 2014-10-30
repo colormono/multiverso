@@ -39,9 +39,9 @@ void dibujarCuerpo( int userId, float _y ) {
   context.convertRealWorldToProjective(cuerpo, cuerpo_2d);
   // Dibujar
   if( userId == 1 ){
-    image(p1cuerpo, cuerpo_2d.x, _y);
+    image(p1cuerpo, cuerpo_2d.x, cuerpo_2d.y);
   }  else if ( userId == 2 ){
-    image(p2cuerpo, cuerpo_2d.x, _y);
+    image(p2cuerpo, cuerpo_2d.x, cuerpo_2d.y);
   }
 }
 

@@ -24,6 +24,7 @@ class Objeto {
     framesPlaying = _playing;
     framesSpecial = _special;
     frame = 0;
+
     // loadImages( String nombre, String extensión, int cantidad_de_frames );
     reposo = loadImages(escenarios[escenarioActual].name+"/"+name+"/reposo_", ".png", _reposo);
     hover = loadImages(escenarios[escenarioActual].name+"/"+name+"/hover_", ".png", _hover);
@@ -50,8 +51,6 @@ class Objeto {
         personajes[i].posicion.x >= x-w/2 && 
         personajes[i].posicion.x <= x+w/2 
       ) {
-        // Activar animación
-        frame = 0;
         // Cambiar estado
         estado = "hover";
         // Disparar sonido
@@ -79,7 +78,8 @@ class Objeto {
         frame = 0;
         image(reposo[frame], 0, 0, w, h);
       }
-    } else if( estado.equals("hover") && hover.length>0 ){
+    } 
+    else if( estado.equals("hover") && hover.length>0 ){
       if( frame < framesHover ){
         image(hover[frame], 0, 0, w, h);
         frame ++;

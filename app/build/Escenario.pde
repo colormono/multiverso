@@ -31,27 +31,16 @@ class Escenario {
     // Si name = "montana"...
     if( fade == 0 ){
       // Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special );
-      Objeto o7 = new Objeto( 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o7);
-      Objeto o8 = new Objeto( 0, -125, 0.1, 1068, 119, false, "nubes", 1, 0, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o8);
-      Objeto o9 = new Objeto( 0, 100, 0.2, 1498, 269, false, "montanas", 1, 0, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o9);
-      Objeto o10 = new Objeto( 0, 270, 0.4, 2048, 281, false, "piso", 1, 0, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o10);
-
-      Objeto o1 = new Objeto( -400, 120, 0.5, 533, 233, true, "dragon", 150, 25, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o1);
-      Objeto o2 = new Objeto( 400, 0, 0.3, 102, 60, true, "peceschicos", 1, 1, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o2);
-      Objeto o3 = new Objeto( -500, -100, 0.3, 205, 120, true, "peces", 1, 1, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o3);
-      Objeto o4 = new Objeto( 900, 200, 0.6, 168, 246, true, "hueco", 1, 1, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o4);
-      Objeto o5 = new Objeto( 300, 180, 0.8, 456, 480, true, "puerta", 1, 1, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o5);
-      Objeto o6 = new Objeto( -1024, 300, 0.9, 273, 98, true, "flor", 1, 1, 0, 0 );
-      objetos = (Objeto[]) append(objetos, o6);
+      objetos = (Objeto[]) append(objetos, new Objeto( 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 0, -125, 0.1, 1068, 119, false, "nubes", 1, 0, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 0, 100, 0.2, 1498, 269, false, "montanas", 1, 0, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 0, 270, 0.4, 2048, 281, false, "piso", 1, 0, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( -400, 120, 0.5, 533, 233, true, "dragon", 50, 25, 25, 25 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 400, 0, 0.3, 102, 60, true, "peceschicos", 1, 1, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( -500, -100, 0.3, 205, 120, true, "peces", 1, 1, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 900, 200, 0.6, 168, 246, true, "hueco", 1, 50, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( 300, 180, 0.8, 456, 480, true, "puerta", 1, 1, 0, 0 ));
+      objetos = (Objeto[]) append(objetos, new Objeto( -1024, 300, 0.9, 273, 98, true, "flor", 1, 1, 0, 0 ));
     }
 
     // fadeIn Blanco
