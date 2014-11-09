@@ -4,6 +4,7 @@ import processing.event.*;
 import processing.opengl.*; 
 
 import SimpleOpenNI.*; 
+import processing.video.*; 
 import oscP5.*; 
 import netP5.*; 
 
@@ -26,6 +27,7 @@ public class build extends PApplet {
 
 SimpleOpenNI context;
 
+
 // OSC
 
 
@@ -44,15 +46,20 @@ boolean pasarNivel = false; // Llave para pasar de nivel
 // Configuraci\u00f3n
 boolean debug = false; // Debug
 boolean debugCamera = false; // Debug Camara
-boolean kinect = false; // Using kinect
+boolean kinect = true; // Using kinect
 PVector tracker; // Tracking
+int estadoApp = 2; // Arrancar desde la intro
 int personajeActual = 0; // Personaje inicial
-int escenarioActual = 2; // Escenario inicial
+int escenarioActual = 1; // Escenario inicial
 boolean iniciar = false; // Bot\u00f3n para iniciar (temporal)
+int frame = 0;
+int timer = 0;
 
 // Imagenes
 PImage p1cabeza, p1cuerpo, p1manod, p1manoi;
 PImage p2cabeza, p2cuerpo, p2manod, p2manoi;
+PImage llaveApagada, llavePrendida;
+Movie bucle, intro;
 
 //---------------------------------------------------------------
 
@@ -69,44 +76,48 @@ public void setup() {
   // Crear Personajes
   // Personaje ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name );
   personajes = new Personaje[0];
-  Personaje p1 = new Personaje( 0, 600, mouseY, 235, 240, true, "pepe" );
+  Personaje p1 = new Personaje( 0, 500, mouseY, 235, 240, true, "pepe" );
   personajes = (Personaje[]) append(personajes, p1);
-  p1cabeza = loadImage("p1-cabeza.png");
-  p1cuerpo = loadImage("p1-cuerpo.png");
-  p1manod = loadImage("p1-mano-d.png");
-  p1manoi = loadImage("p1-mano-i.png");
-  p2cabeza = loadImage("p2-cabeza.png");
-  p2cuerpo = loadImage("p2-cuerpo.png");
-  p2manod = loadImage("p2-mano-d.png");
-  p2manoi = loadImage("p2-mano-i.png");
+  p1cabeza = loadImage("personajes/p1-cabeza.png");
+  p1cuerpo = loadImage("personajes/p1-cuerpo.png");
+  p1manod = loadImage("personajes/p1-mano-d.png");
+  p1manoi = loadImage("personajes/p1-mano-i.png");
+  p2cabeza = loadImage("personajes/p2-cabeza.png");
+  p2cuerpo = loadImage("personajes/p2-cuerpo.png");
+  p2manod = loadImage("personajes/p2-mano-d.png");
+  p2manoi = loadImage("personajes/p2-mano-i.png");
+
+  // Llaves
+  llaveApagada = loadImage("ui/llaveOFF.png");
+  llavePrendida = loadImage("ui/llaveON.png");
+
+  // Intro
+  bucle = new Movie(this, "intro/loop.mov");
+  intro = new Movie(this, "intro/intro.mov");
+  bucle.loop();
 
   // Crear Universos de Objetos
   // Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special, int _sonido );
   escenarios = new Escenario[0];
 
-  // Escenario: Introducci\u00f3n
-  Escenario e1 = new Escenario( "intro" );
+  // Escenario: S\u00f3tano
+  Escenario e1 = new Escenario( "sotano" );
   escenarios = (Escenario[]) append(escenarios, e1);
   //escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0 ));
 
-  // Escenario: S\u00f3tano
-  Escenario e2 = new Escenario( "sotano" );
-  escenarios = (Escenario[]) append(escenarios, e2);
-  //escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0 ));
-
   // Escenario: Monta\u00f1a
-  Escenario e3 = new Escenario( "montana" );
-  escenarios = (Escenario[]) append(escenarios, e3);
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, -125, 0.05f, 1365, 527, false, "cielo", 1, 0, 0, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, -125, 0.1f, 1068, 119, false, "nubes", 1, 0, 0, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, 100, 0.2f, 1498, 269, false, "montanas", 1, 0, 0, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 0, 270, 0.4f, 2048, 281, false, "piso", 1, 0, 0, 0, 0 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -400, 120, 0.5f, 533, 233, true, "dragon", 50, 25, 25, 25, 4 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 400, 0, 0.3f, 102, 60, true, "peceschicos", 1, 1, 0, 0, 2 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -500, -100, 0.3f, 205, 120, true, "peces", 1, 1, 0, 0, 2 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 900, 200, 0.6f, 168, 246, true, "hueco", 1, 50, 0, 0, 8 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 300, 180, 0.8f, 456, 480, true, "puerta", 1, 1, 0, 0, 5 ));
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( -1024, 300, 0.9f, 273, 98, true, "flor", 1, 1, 0, 0, 9 ));
+  Escenario e2 = new Escenario( "montana" );
+  escenarios = (Escenario[]) append(escenarios, e2);
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, -125, 0.05f, 1365, 527, false, "cielo", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, -125, 0.1f, 1068, 119, false, "nubes", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, 100, 0.2f, 1498, 269, false, "montanas", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, 270, 0.4f, 2048, 281, false, "piso", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( -400, 120, 0.5f, 533, 233, true, "dragon", 50, 25, 25, 25, 4 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 400, 0, 0.3f, 102, 60, true, "peces", 24, 24, 0, 0, 2 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( -500, -100, 0.3f, 205, 120, true, "peces", 24, 24, 0, 0, 2 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 900, 200, 0.6f, 168, 246, true, "hueco", 1, 50, 0, 0, 8 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 300, 180, 0.8f, 400, 600, true, "puerta", 1, 24, 0, 24, 5 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( -1024, 300, 0.9f, 300, 300, true, "flor", 1, 128, 0, 0, 9 ));
   // Iniciar sonido ambiente
   OscMessage _audio = new OscMessage("/audio");
   _audio.add(1);
@@ -118,13 +129,13 @@ public void setup() {
 
     // Inicializar un nuevo objeto contexto
     context = new SimpleOpenNI(this);
+    context.setMirror(true);
 
     // Habilitar la carga de imagen de profundidad 
     context.enableDepth();
 
     // Habilitar detecci\u00f3n de esqueleto para todas las juntas
     context.enableUser();
-    context.setMirror(false);
 
     // Test Kinect
     if( context.isInit() == false ){
@@ -152,7 +163,7 @@ public void draw() {
     context.update(); // Actualizar imagen de c\u00e1mara
     _xt = personajes[personajeActual].posicion.x;
     _yt = personajes[personajeActual].posicion.y;
-    tracker.x = map( _xt, 0, 600, width, -width );
+    tracker.x = map( _xt, 0, 550, width, -width );
     tracker.y = map( _yt, 0, height, 0, 10 );
   } else {
     _xt = mouseX;
@@ -161,63 +172,92 @@ public void draw() {
     tracker.y = map( _yt, 0, height, 0, 10 );
   }
 
-  // Escenario: Esperando
-  // Si detecta un usuario, enciende la aplicaci\u00f3n
-  if ( escenarios[escenarioActual].estado.equals( "esperando" ) ) {
-    escenarios[escenarioActual].esperar( iniciar );
-  }
-
-  // Escenario: Encendiendo
-  // Animaci\u00f3n de entrada del escenario, crear universo
-  if ( escenarios[escenarioActual].estado.equals( "encendiendo" ) ) {
-    escenarios[escenarioActual].encender();
-  }
-
-  // Escenario: Prendido
-  // Habilita la interacci\u00f3n del usuario con los objetos
-  if ( escenarios[escenarioActual].estado.equals( "prendido" ) ) {
-
-    // Escenario
-    escenarios[escenarioActual].dibujar();
-    
-    if ( kinect ) {
-      // Detectar jugadores
-      int [] userList = context.getUsers();
-      for ( int i=0; i<userList.length; i++ ) {
-        // Consultar si el esqueleto existe
-        if (context.isTrackingSkeleton(userList[i])) {
-
-          // Probar con translate?
-
-          // Punto central
-          PVector cuerpo = new PVector();
-          context.getJointPositionSkeleton( userList[i], SimpleOpenNI.SKEL_TORSO, cuerpo );
-          PVector cuerpo_2d = new PVector(); 
-          context.convertRealWorldToProjective(cuerpo, cuerpo_2d);
-
-          // Dibujar
-          //drawSkeleton( userList[i] );
-          dibujarCuerpo( userList[i], personajes[personajeActual].posicion.y );
-          dibujarCabeza( userList[i], personajes[personajeActual].posicion.y );
-          dibujarManoIzquierda( userList[i], personajes[personajeActual].posicion.y );
-          dibujarManoDerecha( userList[i], personajes[personajeActual].posicion.y );
-
-          //personajes[personajeActual].update(); // Players
-          personajes[personajeActual].update(cuerpo_2d.x);
-        }
-      }
-    } else {
-      personajes[personajeActual].update(); // Players
+  // Estado
+  if( estadoApp == 0 ){
+    // Loop
+    pushStyle();
+    imageMode(CORNER);
+    bucle.read();
+    image(bucle, 0, 0);
+    popStyle();
+  } 
+  else if( estadoApp == 1 ){
+    // Loop
+    pushStyle();
+    imageMode(CORNER);
+    intro.read();
+    image(intro, 0, 0);
+    popStyle();
+    float md = intro.duration();
+    float mt = intro.time();
+    if (mt >= md) {
+      estadoApp = 2;
+      iniciar = true;
+    }
+  } 
+  else if( estadoApp == 2 ) {
+    // Escenario: Esperando
+    // Si detecta un usuario, enciende la aplicaci\u00f3n
+    if ( escenarios[escenarioActual].estado.equals( "esperando" ) ) {
+      escenarios[escenarioActual].esperar( iniciar );
     }
 
-    // Fade
-    escenarios[escenarioActual].prendido();
-  }
+    // Escenario: Encendiendo
+    // Animaci\u00f3n de entrada del escenario, crear universo
+    if ( escenarios[escenarioActual].estado.equals( "encendiendo" ) ) {
+      escenarios[escenarioActual].encender();
+    }
 
-  // Escenario: Apagando
-  // Animaci\u00f3n de salida del escenario
-  if ( escenarios[escenarioActual].estado.equals( "apagando" ) ) {
-    escenarios[escenarioActual].apagar();
+    // Escenario: Prendido
+    // Habilita la interacci\u00f3n del usuario con los objetos
+    if ( escenarios[escenarioActual].estado.equals( "prendido" ) ) {
+
+      // Escenario
+      escenarios[escenarioActual].dibujar();
+      
+      if ( kinect ) {
+        // Detectar jugadores
+        int [] userList = context.getUsers();
+        for ( int i=0; i<userList.length; i++ ) {
+          // Consultar si el esqueleto existe
+          if (context.isTrackingSkeleton(userList[i])) {
+
+            // Probar con translate?
+
+            // Punto central
+            PVector cuerpo = new PVector();
+            context.getJointPositionSkeleton( userList[i], SimpleOpenNI.SKEL_TORSO, cuerpo );
+            PVector cuerpo_2d = new PVector(); 
+            context.convertRealWorldToProjective(cuerpo, cuerpo_2d);
+
+            // Dibujar
+            pushMatrix();
+            translate( 0, personajes[personajeActual].posicion.y );
+            //drawSkeleton( userList[i] );
+            dibujarCuerpo( userList[i] );
+            dibujarCabeza( userList[i] );
+            dibujarManoIzquierda( userList[i] );
+            dibujarManoDerecha( userList[i] );
+            popMatrix();
+
+            //personajes[personajeActual].update(); // Players
+            personajes[personajeActual].update(cuerpo_2d.x);
+          }
+        }
+      } else {
+        personajes[personajeActual].update(); // Players
+      }
+
+      // Fade
+      escenarios[escenarioActual].prendido();
+    }
+
+    // Escenario: Apagando
+    // Animaci\u00f3n de salida del escenario
+    if ( escenarios[escenarioActual].estado.equals( "apagando" ) ) {
+      escenarios[escenarioActual].apagar();
+    }
+
   }
 
   // Im\u00e1gen de c\u00e1mara
@@ -232,7 +272,7 @@ public void draw() {
     fill(0, 200);
     rect(0, height-80, width, 80);
     fill( 0, 255, 0 );
-    text("Escenario "+ escenarioActual + " - Estado: " + escenarios[escenarioActual].estado, 10, height-60 );
+    text("Estado App: "+ estadoApp + " - Escenario: "+ escenarioActual + " - Estado: " + escenarios[escenarioActual].estado, 10, height-60 );
     text("Personaje "+ personajeActual + " - x=" + personajes[personajeActual].posicion.x, 10, height-40 );
     text("Tracker: x="+tracker.x+" - y="+tracker.y+" - z="+ tracker.z + " - Framerate: " + (int)frameRate, 10, height-20 );
     popStyle();
@@ -246,11 +286,6 @@ public void keyPressed() {
   if (key == 'd' || key == 'D') debug = !debug;
   if (key == 'c' || key == 'C') debugCamera = !debugCamera;
   if (key == 's' || key == 'S') iniciar = true;
-
-  // Controlar secuencias
-  if (key == '1') escenarioActual = 0;
-  if (key == '2') escenarioActual = 1;
-  if (key == '3') escenarioActual = 2;
 }
 class Escenario {
 
@@ -280,10 +315,10 @@ class Escenario {
 
   // Encender
   public void encender() {
-    // fadeIn Blanco
+    // fadeIn Negro
     if ( fade < fadeDuracion ) {
       float _fade = map(fade, 0, fadeDuracion, 0, 255);
-      fill(255, _fade);
+      fill(0, _fade);
       rect(width/2, height/2, width, height);
       fade ++;
     } else {
@@ -294,10 +329,10 @@ class Escenario {
 
   // Prendido
   public void prendido() {    
-    // fadeOut Blanco
+    // fadeOut Negro
     if ( fade < fadeDuracion ) {
       float _fade = map(fade, 0, fadeDuracion, 255, 0);
-      fill(255, _fade);
+      fill(0, _fade);
       rect(width/2, height/2, width, height);
       fade ++;
     }
@@ -346,7 +381,7 @@ public void drawSkeleton(int userId) {
 
 //---------------------------------------------------------------
 
-public void dibujarCuerpo( int userId, float _y ) {
+public void dibujarCuerpo( int userId ) {
   // Crear un vector para obtener la posici\u00f3n
   PVector cuerpo = new PVector();
   context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_TORSO, cuerpo );
@@ -356,15 +391,15 @@ public void dibujarCuerpo( int userId, float _y ) {
   context.convertRealWorldToProjective(cuerpo, cuerpo_2d);
   // Dibujar
   if( userId == 1 ){
-    image(p1cuerpo, cuerpo_2d.x, _y);
+    image(p1cuerpo, cuerpo_2d.x, cuerpo_2d.y);
   }  else if ( userId == 2 ){
-    image(p2cuerpo, cuerpo_2d.x, _y);
+    image(p2cuerpo, cuerpo_2d.x, cuerpo_2d.y);
   }
 }
 
 //---------------------------------------------------------------
 
-public void dibujarCabeza( int userId, float _y ) {
+public void dibujarCabeza( int userId ) {
   // Crear un vector para obtener la posici\u00f3n
   PVector cabeza = new PVector();
   context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_HEAD, cabeza );
@@ -372,55 +407,58 @@ public void dibujarCabeza( int userId, float _y ) {
   PVector cabeza_2d = new PVector(); 
   // Convertir la posici\u00f3n 3D al 2D de la pantalla
   context.convertRealWorldToProjective(cabeza, cabeza_2d);
+  // a 200 pixel diameter head
+  //float headsize = 500; 
+  // create a distance scalar related to the depth (z dimension)
+  //float distanceScalar = (525/cabeza_2d.z);
   // Dibujar
   if( userId == 1 ){
-    image(p1cabeza, cabeza_2d.x, _y-145);
+    //image(p1cabeza, cabeza_2d.x, cabeza_2d.y, distanceScalar*headsize, distanceScalar*headsize );
+    image(p1cabeza, cabeza_2d.x, cabeza_2d.y-30 );
   }  else if ( userId == 2 ){
-    image(p2cabeza, cabeza_2d.x, _y-125);
+    //image(p2cabeza, cabeza_2d.x, cabeza_2d.y, distanceScalar*headsize, distanceScalar*headsize );
+    image(p2cabeza, cabeza_2d.x, cabeza_2d.y-30 );
+  }
+  // Si est\u00e1 la llave activa
+  if( pasarNivel ){
+    image(llavePrendida, cabeza_2d.x, p2cabeza.height-llavePrendida.height);
   }
 }
 
 //---------------------------------------------------------------
 
-public void dibujarManoIzquierda( int userId, float _y ) {
+public void dibujarManoIzquierda( int userId ) {
   // Crear un vector para obtener la posici\u00f3n
+
   PVector manoIzquierda = new PVector();
-  PVector hombroIzquierdo = new PVector();
-  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_LEFT_HAND, manoIzquierda );
-  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_LEFT_SHOULDER, hombroIzquierdo );
+  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_LEFT_ELBOW, manoIzquierda );
   // Crear un vector para proyectar en 2D
   PVector manoIzquierda_2d = new PVector(); 
-  PVector hombroIzquierdo_2d = new PVector(); 
   // Convertir la posici\u00f3n 3D al 2D de la pantalla
   context.convertRealWorldToProjective(manoIzquierda, manoIzquierda_2d);
-  context.convertRealWorldToProjective(hombroIzquierdo, hombroIzquierdo_2d);
   // Dibujar
   if( userId == 1 ){
-    image(p1manoi, hombroIzquierdo_2d.x+manoIzquierda_2d.x*0.2f, _y-120-manoIzquierda_2d.y*0.3f);
+    image(p1manoi, manoIzquierda_2d.x, manoIzquierda_2d.y);
   }  else if ( userId == 2 ){
-    image(p2manoi, hombroIzquierdo_2d.x+manoIzquierda_2d.x*0.2f, _y-120-manoIzquierda_2d.y*0.3f);
+    image(p2manoi, manoIzquierda_2d.x, manoIzquierda_2d.y);
   }
 }
 
 //---------------------------------------------------------------
 
-public void dibujarManoDerecha( int userId, float _y ) {
+public void dibujarManoDerecha( int userId ) {
   // Crear un vector para obtener la posici\u00f3n
   PVector manoDerecha = new PVector();
-  PVector hombroDerecho = new PVector();
-  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_RIGHT_HAND, manoDerecha );
-  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_RIGHT_SHOULDER, hombroDerecho );
+  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_RIGHT_ELBOW, manoDerecha );
   // Crear un vector para proyectar en 2D
   PVector manoDerecha_2d = new PVector(); 
-  PVector hombroDerecho_2d = new PVector(); 
   // Convertir la posici\u00f3n 3D al 2D de la pantalla
   context.convertRealWorldToProjective(manoDerecha, manoDerecha_2d);
-  context.convertRealWorldToProjective(hombroDerecho, hombroDerecho_2d);
   // Dibujar
   if( userId == 1 ){
-    image(p1manoi, hombroDerecho_2d.x-manoDerecha_2d.x*0.2f, _y-120-manoDerecha_2d.y*0.3f);
+    image(p1manoi, manoDerecha_2d.x, manoDerecha_2d.y);
   }  else if ( userId == 2 ){
-    image(p2manoi, hombroDerecho_2d.x-manoDerecha_2d.x*0.2f, _y-120-manoDerecha_2d.y*0.3f);
+    image(p2manoi, manoDerecha_2d.x, manoDerecha_2d.y);
   }
 }
 
@@ -432,8 +470,14 @@ public void onNewUser(SimpleOpenNI curContext, int userId) {
   println("\tstart tracking skeleton");
   curContext.startTrackingSkeleton(userId);
 
-  // Activar bot\u00f3n de iniciar
-  iniciar = true;
+  // Cambios de estado de la app
+  if( estadoApp == 0 ){
+    // Si detecta a un personaje, cambia la secuencia
+    estadoApp = 1;
+    intro.jump(0);
+    intro.play();
+  }
+
 }
 
 //---------------------------------------------------------------
@@ -569,6 +613,9 @@ class Objeto {
       // Si es la puerta y tenes la llave
       if( name == "puerta" && pasarNivel == true ){
         println("Pasaste de nivel");
+        // Cambiar estado
+        escenarioActual = 0;
+        estado = "encendiendo";
       }
 
     }
@@ -589,7 +636,6 @@ class Objeto {
     if( estado.equals("special") && hover.length>0 ){
       if( frame < framesSpecial ){
         image(special[frame], 0, 0, w, h);
-        println("frame: "+frame);
         if( millis()-timer >= 100 ){
           frame ++;
           timer = millis();

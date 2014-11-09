@@ -118,6 +118,9 @@ class Objeto {
       // Si es la puerta y tenes la llave
       if( name == "puerta" && pasarNivel == true ){
         println("Pasaste de nivel");
+        // Cambiar estado
+        escenarioActual = 0;
+        estado = "encendiendo";
       }
 
     }
@@ -138,7 +141,6 @@ class Objeto {
     if( estado.equals("special") && hover.length>0 ){
       if( frame < framesSpecial ){
         image(special[frame], 0, 0, w, h);
-        println("frame: "+frame);
         if( millis()-timer >= 100 ){
           frame ++;
           timer = millis();

@@ -29,7 +29,7 @@ void drawSkeleton(int userId) {
 
 //---------------------------------------------------------------
 
-void dibujarCuerpo( int userId, float _y ) {
+void dibujarCuerpo( int userId ) {
   // Crear un vector para obtener la posición
   PVector cuerpo = new PVector();
   context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_TORSO, cuerpo );
@@ -39,15 +39,15 @@ void dibujarCuerpo( int userId, float _y ) {
   context.convertRealWorldToProjective(cuerpo, cuerpo_2d);
   // Dibujar
   if( userId == 1 ){
-    image(p1cuerpo, cuerpo_2d.x, _y);
+    image(p1cuerpo, cuerpo_2d.x, cuerpo_2d.y);
   }  else if ( userId == 2 ){
-    image(p2cuerpo, cuerpo_2d.x, _y);
+    image(p2cuerpo, cuerpo_2d.x, cuerpo_2d.y);
   }
 }
 
 //---------------------------------------------------------------
 
-void dibujarCabeza( int userId, float _y ) {
+void dibujarCabeza( int userId ) {
   // Crear un vector para obtener la posición
   PVector cabeza = new PVector();
   context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_HEAD, cabeza );
@@ -55,55 +55,58 @@ void dibujarCabeza( int userId, float _y ) {
   PVector cabeza_2d = new PVector(); 
   // Convertir la posición 3D al 2D de la pantalla
   context.convertRealWorldToProjective(cabeza, cabeza_2d);
+  // a 200 pixel diameter head
+  //float headsize = 500; 
+  // create a distance scalar related to the depth (z dimension)
+  //float distanceScalar = (525/cabeza_2d.z);
   // Dibujar
   if( userId == 1 ){
-    image(p1cabeza, cabeza_2d.x, _y-145);
+    //image(p1cabeza, cabeza_2d.x, cabeza_2d.y, distanceScalar*headsize, distanceScalar*headsize );
+    image(p1cabeza, cabeza_2d.x, cabeza_2d.y-30 );
   }  else if ( userId == 2 ){
-    image(p2cabeza, cabeza_2d.x, _y-125);
+    //image(p2cabeza, cabeza_2d.x, cabeza_2d.y, distanceScalar*headsize, distanceScalar*headsize );
+    image(p2cabeza, cabeza_2d.x, cabeza_2d.y-30 );
+  }
+  // Si está la llave activa
+  if( pasarNivel ){
+    image(llavePrendida, cabeza_2d.x, p2cabeza.height-llavePrendida.height*2);
   }
 }
 
 //---------------------------------------------------------------
 
-void dibujarManoIzquierda( int userId, float _y ) {
+void dibujarManoIzquierda( int userId ) {
   // Crear un vector para obtener la posición
+
   PVector manoIzquierda = new PVector();
-  PVector hombroIzquierdo = new PVector();
-  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_LEFT_HAND, manoIzquierda );
-  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_LEFT_SHOULDER, hombroIzquierdo );
+  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_LEFT_ELBOW, manoIzquierda );
   // Crear un vector para proyectar en 2D
   PVector manoIzquierda_2d = new PVector(); 
-  PVector hombroIzquierdo_2d = new PVector(); 
   // Convertir la posición 3D al 2D de la pantalla
   context.convertRealWorldToProjective(manoIzquierda, manoIzquierda_2d);
-  context.convertRealWorldToProjective(hombroIzquierdo, hombroIzquierdo_2d);
   // Dibujar
   if( userId == 1 ){
-    image(p1manoi, hombroIzquierdo_2d.x+manoIzquierda_2d.x*0.2, _y-120-manoIzquierda_2d.y*0.3);
+    image(p1manoi, manoIzquierda_2d.x, manoIzquierda_2d.y);
   }  else if ( userId == 2 ){
-    image(p2manoi, hombroIzquierdo_2d.x+manoIzquierda_2d.x*0.2, _y-120-manoIzquierda_2d.y*0.3);
+    image(p2manoi, manoIzquierda_2d.x, manoIzquierda_2d.y);
   }
 }
 
 //---------------------------------------------------------------
 
-void dibujarManoDerecha( int userId, float _y ) {
+void dibujarManoDerecha( int userId ) {
   // Crear un vector para obtener la posición
   PVector manoDerecha = new PVector();
-  PVector hombroDerecho = new PVector();
-  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_RIGHT_HAND, manoDerecha );
-  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_RIGHT_SHOULDER, hombroDerecho );
+  context.getJointPositionSkeleton( userId, SimpleOpenNI.SKEL_RIGHT_ELBOW, manoDerecha );
   // Crear un vector para proyectar en 2D
   PVector manoDerecha_2d = new PVector(); 
-  PVector hombroDerecho_2d = new PVector(); 
   // Convertir la posición 3D al 2D de la pantalla
   context.convertRealWorldToProjective(manoDerecha, manoDerecha_2d);
-  context.convertRealWorldToProjective(hombroDerecho, hombroDerecho_2d);
   // Dibujar
   if( userId == 1 ){
-    image(p1manoi, hombroDerecho_2d.x-manoDerecha_2d.x*0.2, _y-120-manoDerecha_2d.y*0.3);
+    image(p1manoi, manoDerecha_2d.x, manoDerecha_2d.y);
   }  else if ( userId == 2 ){
-    image(p2manoi, hombroDerecho_2d.x-manoDerecha_2d.x*0.2, _y-120-manoDerecha_2d.y*0.3);
+    image(p2manoi, manoDerecha_2d.x, manoDerecha_2d.y);
   }
 }
 
@@ -115,8 +118,14 @@ void onNewUser(SimpleOpenNI curContext, int userId) {
   println("\tstart tracking skeleton");
   curContext.startTrackingSkeleton(userId);
 
-  // Activar botón de iniciar
-  iniciar = true;
+  // Cambios de estado de la app
+  if( estadoApp == 0 ){
+    // Si detecta a un personaje, cambia la secuencia
+    estadoApp = 1;
+    intro.jump(0);
+    intro.play();
+  }
+
 }
 
 //---------------------------------------------------------------

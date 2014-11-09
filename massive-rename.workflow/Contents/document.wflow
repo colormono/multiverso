@@ -52,56 +52,31 @@
 				<dict>
 					<key>fileNames</key>
 					<array>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00000.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00001.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00002.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00003.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00004.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00005.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00006.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00007.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00008.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00009.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00010.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00011.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00012.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00013.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00014.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00015.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00016.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00017.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00018.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00019.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00020.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00021.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00022.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00023.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00024.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00025.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00026.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00027.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00028.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00029.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00030.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00031.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00032.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00033.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00034.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00035.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00036.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00037.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00038.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00039.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00040.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00041.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00042.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00043.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00044.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00045.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00046.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00047.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00048.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/Diseños/documents-export-2014-10-01 2/Hueco/Hueco/Hueco cajita_00049.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00000.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00001.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00002.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00003.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00004.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00005.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00006.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00007.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00008.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00009.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00010.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00011.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00012.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00013.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00014.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00015.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00016.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00017.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00018.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00019.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00020.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00021.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00022.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00023.png</string>
+						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00024.png</string>
 					</array>
 				</dict>
 				<key>BundleIdentifier</key>
@@ -194,7 +169,12 @@
 					<key>dateToUse</key>
 					<dict/>
 					<key>defaultName</key>
-					<dict/>
+					<dict>
+						<key>tokenizedValue</key>
+						<array>
+							<string>hover</string>
+						</array>
+					</dict>
 					<key>ignoreCase</key>
 					<dict/>
 					<key>includeExtensions</key>
@@ -219,7 +199,7 @@
 					<dict>
 						<key>tokenizedValue</key>
 						<array>
-							<string>hover_</string>
+							<string>intro_</string>
 						</array>
 					</dict>
 					<key>singleItemOption</key>
@@ -232,7 +212,7 @@
 					<dict>
 						<key>tokenizedValue</key>
 						<array>
-							<string>Hueco cajita_</string>
+							<string>IntroCross</string>
 						</array>
 					</dict>
 					<key>useLeadingZeros</key>
@@ -250,7 +230,7 @@
 				<key>ActionBundlePath</key>
 				<string>/System/Library/Automator/Rename Finder Items.action</string>
 				<key>ActionName</key>
-				<string>Rename Finder Items: Replace Text</string>
+				<string>Rename Finder Items: Make Sequential</string>
 				<key>ActionParameters</key>
 				<dict>
 					<key>caseIndicator</key>
@@ -264,7 +244,7 @@
 					<key>dateToUse</key>
 					<integer>0</integer>
 					<key>defaultName</key>
-					<string></string>
+					<string>hover</string>
 					<key>ignoreCase</key>
 					<true/>
 					<key>includeExtensions</key>
@@ -272,7 +252,7 @@
 					<key>insertionPosition</key>
 					<integer>0</integer>
 					<key>minimumCount</key>
-					<string>2</string>
+					<real>5</real>
 					<key>nameDateSeparator</key>
 					<integer>0</integer>
 					<key>nameSingleItem</key>
@@ -280,23 +260,23 @@
 					<key>numberLocation</key>
 					<integer>0</integer>
 					<key>numberSeparator</key>
-					<integer>0</integer>
+					<integer>3</integer>
 					<key>renameItems</key>
-					<integer>0</integer>
+					<integer>1</integer>
 					<key>renameType</key>
-					<integer>4</integer>
+					<integer>3</integer>
 					<key>replaceWithText</key>
-					<string>hover_</string>
+					<string>intro_</string>
 					<key>singleItemOption</key>
 					<integer>0</integer>
 					<key>startingNumber</key>
-					<integer>1</integer>
+					<real>0.0</real>
 					<key>textInput</key>
 					<string></string>
 					<key>textToFind</key>
-					<string>Hueco cajita_</string>
+					<string>IntroCross</string>
 					<key>useLeadingZeros</key>
-					<false/>
+					<true/>
 				</dict>
 				<key>BundleIdentifier</key>
 				<string>com.apple.Automator.AddNumbersToFinderNames</string>
@@ -643,7 +623,7 @@
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>AAC0AD01-FC1F-49DF-BE2A-9CDADAC57979</key>
+		<key>3975ECD7-0610-468D-B859-38AF59C380C4</key>
 		<dict>
 			<key>from</key>
 			<string>92B65207-7F93-450E-BBE0-952B0B8B5026 - 92B65207-7F93-450E-BBE0-952B0B8B5026</string>

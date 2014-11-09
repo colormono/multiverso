@@ -26,10 +26,10 @@ class Escenario {
 
   // Encender
   void encender() {
-    // fadeIn Blanco
+    // fadeIn Negro
     if ( fade < fadeDuracion ) {
       float _fade = map(fade, 0, fadeDuracion, 0, 255);
-      fill(255, _fade);
+      fill(0, _fade);
       rect(width/2, height/2, width, height);
       fade ++;
     } else {
@@ -40,10 +40,10 @@ class Escenario {
 
   // Prendido
   void prendido() {    
-    // fadeOut Blanco
+    // fadeOut Negro
     if ( fade < fadeDuracion ) {
       float _fade = map(fade, 0, fadeDuracion, 255, 0);
-      fill(255, _fade);
+      fill(0, _fade);
       rect(width/2, height/2, width, height);
       fade ++;
     }
