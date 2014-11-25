@@ -1,6 +1,7 @@
 class Objeto {
 
   //.h
+  int universo; // Universo
   PVector posicion; // Posición X, Y, Z
   float x, y; // Posiciones absolutas
   int w, h; // Ancho y Alto
@@ -13,9 +14,11 @@ class Objeto {
   int sonido; // Contador de frames
   OscMessage _audio;
   int timer;
+  int k;
 
   // Constructor
-  Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special, int _sonido) {
+  Objeto ( int _universo, float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special, int _sonido) {
+    universo = _universo;
     posicion = new PVector( _x, _y, _z );
     w = _w;
     h = _h;
@@ -28,13 +31,14 @@ class Objeto {
     framesSpecial = _special;
     frame = 0;
     timer = 0;
+    k=1;
 
     // Imagen
     // loadImages( String nombre, String extensión, int cantidad_de_frames );
-    reposo = loadImages(escenarios[escenarioActual].name+"/"+name+"/reposo_", ".png", _reposo);
-    hover = loadImages(escenarios[escenarioActual].name+"/"+name+"/hover_", ".png", _hover);
-    playing = loadImages(escenarios[escenarioActual].name+"/"+name+"/playing_", ".png", _playing);
-    special = loadImages(escenarios[escenarioActual].name+"/"+name+"/special_", ".png", _special);
+    reposo = loadImages(escenarios[universo].name+"/"+name+"/reposo_", ".png", _reposo);
+    hover = loadImages(escenarios[universo].name+"/"+name+"/hover_", ".png", _hover);
+    playing = loadImages(escenarios[universo].name+"/"+name+"/playing_", ".png", _playing);
+    special = loadImages(escenarios[universo].name+"/"+name+"/special_", ".png", _special);
 
     // Audio
     sonido = _sonido;
@@ -44,8 +48,20 @@ class Objeto {
 
   // Actualizar
   void update() {
-    x = width/2+posicion.x+tracker.x*posicion.z;
+    x = width/2+posicion.x+tracker.x*posicion.z; 
     y = height/2+posicion.y;
+
+    if( name == "peces" ){
+      x = width/2+posicion.x+k+tracker.x*posicion.z;
+    }
+    if( name == "nubes" ){
+      x = width/2+posicion.x+k*0.1+tracker.x*posicion.z;
+    }
+    if( k > 1500 ){
+      k = -1500;
+    } else {
+      k += random(0,10);
+    }
 
     dibujar();
 
@@ -118,8 +134,30 @@ class Objeto {
       // Si es la puerta y tenes la llave
       if( name == "puerta" && pasarNivel == true ){
         println("Pasaste de nivel");
-        // Cambiar estado
-        escenarioActual = 0;
+        if( escenarioActual == 1 ){
+          pasarNivel = false;
+          escenarioActual = 2; 
+        }
+        estado = "encendiendo";
+      }
+
+
+      // Si es el dragon y suena la cajita
+      if( name == "llaveSotano" ){
+        pasarNivel = true;
+      }
+
+      // Si es el cofre y tenes la llave
+      if( name == "cofre" && pasarNivel == true ){
+        // Pasajes de universos
+        if( escenarioActual == 0 ){ 
+          // Si detecta a un personaje, cambia la secuencia
+          pasarNivel = false;
+          escenarioActual = 1;
+          estadoApp = 3;
+          cofre.jump(0);
+          cofre.play();
+        }
         estado = "encendiendo";
       }
 

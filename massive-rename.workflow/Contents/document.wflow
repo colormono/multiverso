@@ -52,31 +52,25 @@
 				<dict>
 					<key>fileNames</key>
 					<array>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00000.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00001.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00002.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00003.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00004.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00005.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00006.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00007.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00008.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00009.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00010.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00011.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00012.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00013.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00014.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00015.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00016.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00017.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00018.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00019.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00020.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00021.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00022.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00023.png</string>
-						<string>/Volumes/QUALE01/Animaciones/Cardumen 1s/reposo_00024.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00000.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00001.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00002.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00003.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00004.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00005.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00006.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00007.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00008.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00009.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00010.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00011.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00012.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00013.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00014.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00015.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00016.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00017.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00018.png</string>
 					</array>
 				</dict>
 				<key>BundleIdentifier</key>
@@ -172,7 +166,7 @@
 					<dict>
 						<key>tokenizedValue</key>
 						<array>
-							<string>hover</string>
+							<string>ghover</string>
 						</array>
 					</dict>
 					<key>ignoreCase</key>
@@ -244,7 +238,7 @@
 					<key>dateToUse</key>
 					<integer>0</integer>
 					<key>defaultName</key>
-					<string>hover</string>
+					<string>ghover</string>
 					<key>ignoreCase</key>
 					<true/>
 					<key>includeExtensions</key>
@@ -623,7 +617,7 @@
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>3975ECD7-0610-468D-B859-38AF59C380C4</key>
+		<key>932CF624-BC84-4906-9546-AEA6F57CF226</key>
 		<dict>
 			<key>from</key>
 			<string>92B65207-7F93-450E-BBE0-952B0B8B5026 - 92B65207-7F93-450E-BBE0-952B0B8B5026</string>

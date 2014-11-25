@@ -32,34 +32,34 @@ SimpleOpenNI context;
 
 
 
-// Objetos
+// Objetos y controles
 Personaje personajes[]; // Personajes
 Escenario escenarios[]; // Escenarios
 Objeto objetos[]; // Objetos
 OscP5 oscP5; // Objeto OSC
 NetAddress direccionRemota; // Direcci\u00f3n remota
-int puerto; // Puerto de salida OSC 
-
+int puerto; // Puerto de salida OSC
 boolean llave = false; // Llave para pasar de nivel
 boolean pasarNivel = false; // Llave para pasar de nivel
+int frame = 0;
+int timer = 0;
 
 // Configuraci\u00f3n
 boolean debug = false; // Debug
 boolean debugCamera = false; // Debug Camara
 boolean kinect = true; // Using kinect
 PVector tracker; // Tracking
-int estadoApp = 2; // Arrancar desde la intro
-int personajeActual = 0; // Personaje inicial
-int escenarioActual = 1; // Escenario inicial
+int estadoApp = 0; // Arrancar desde la intro (LoopIntro=0, 1=Video, 2=Nivel, 3=VideoLlave)
+int personajeActual = 0; // Personaje inicial (Pepe = 0)
+int escenarioActual = 0; // Escenario inicial (Sotano = 0)
 boolean iniciar = false; // Bot\u00f3n para iniciar (temporal)
-int frame = 0;
-int timer = 0;
 
-// Imagenes
+// Imagenes y videos
 PImage p1cabeza, p1cuerpo, p1manod, p1manoi;
 PImage p2cabeza, p2cuerpo, p2manod, p2manoi;
-PImage llaveApagada, llavePrendida;
-Movie bucle, intro;
+PImage llaveApagada, llavePrendida, ojo;
+Movie bucle, intro, cofre;
+Eye ojo1;
 
 //---------------------------------------------------------------
 
@@ -86,42 +86,52 @@ public void setup() {
   p2cuerpo = loadImage("personajes/p2-cuerpo.png");
   p2manod = loadImage("personajes/p2-mano-d.png");
   p2manoi = loadImage("personajes/p2-mano-i.png");
+  ojo = loadImage("sotano/ojo.png");
 
   // Llaves
   llaveApagada = loadImage("ui/llaveOFF.png");
   llavePrendida = loadImage("ui/llaveON.png");
 
-  // Intro
+  // Videos
   bucle = new Movie(this, "intro/loop.mov");
   intro = new Movie(this, "intro/intro.mov");
+  cofre = new Movie(this, "intro/cofre.mov");
   bucle.loop();
 
   // Crear Universos de Objetos
-  // Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special, int _sonido );
+  // Objeto ( int _universo, float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special, int _sonido );
   escenarios = new Escenario[0];
 
   // Escenario: S\u00f3tano
   Escenario e1 = new Escenario( "sotano" );
   escenarios = (Escenario[]) append(escenarios, e1);
-  //escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0 ));
+  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, 0, 0, 0.1f, 1365, 768, false, "fondo", 1, 0, 0, 0, 0 ));
+  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, -400, 200, 0.2f, 200, 200, true, "cofre", 1, 23, 0, 0, 0 ));
+  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, 300, 0, 0.1f, 215, 491, true, "llaveSotano", 1, 1, 0, 0, 0 ));
+  ojo1 = new Eye( 100,  180, 40);
 
   // Escenario: Monta\u00f1a
   Escenario e2 = new Escenario( "montana" );
   escenarios = (Escenario[]) append(escenarios, e2);
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, -125, 0.05f, 1365, 527, false, "cielo", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, -125, 0.1f, 1068, 119, false, "nubes", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, 100, 0.2f, 1498, 269, false, "montanas", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, 270, 0.4f, 2048, 281, false, "piso", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( -400, 120, 0.5f, 533, 233, true, "dragon", 50, 25, 25, 25, 4 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 400, 0, 0.3f, 102, 60, true, "peces", 24, 24, 0, 0, 2 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( -500, -100, 0.3f, 205, 120, true, "peces", 24, 24, 0, 0, 2 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 900, 200, 0.6f, 168, 246, true, "hueco", 1, 50, 0, 0, 8 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 300, 180, 0.8f, 400, 600, true, "puerta", 1, 24, 0, 24, 5 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( -1024, 300, 0.9f, 300, 300, true, "flor", 1, 128, 0, 0, 9 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, -125, 0.05f, 1365, 527, false, "cielo", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, -125, 0.1f, 1068, 119, false, "nubes", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, 100, 0.2f, 1498, 269, false, "montanas", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, 270, 0.4f, 2048, 281, false, "piso", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, -400, 120, 0.5f, 533, 233, true, "dragon", 50, 46, 0, 25, 4 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 400, 0, 0.3f, 102, 60, true, "peces", 24, 24, 0, 0, 2 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, -500, -100, 0.3f, 205, 120, true, "peces", 24, 24, 0, 0, 2 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 700, 200, 0.6f, 168, 246, true, "hueco", 1, 89, 0, 0, 8 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 350, 140, 0.8f, 300, 450, true, "puerta", 1, 24, 0, 24, 5 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, -500, 160, 0.9f, 200, 200, true, "flor", 1, 32, 0, 0, 9 ));
   // Iniciar sonido ambiente
   OscMessage _audio = new OscMessage("/audio");
   _audio.add(1);
   oscP5.send(_audio, direccionRemota);
+
+  // Escenario: Street Fighter
+  Escenario e3 = new Escenario( "fighter" );
+  escenarios = (Escenario[]) append(escenarios, e3);
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, 0, 0, 0.2f, 2600, 768, false, "fondo", 1, 0, 0, 0, 0 ));
 
 
   // Si se est\u00e1 utilizando la Kinect
@@ -163,7 +173,7 @@ public void draw() {
     context.update(); // Actualizar imagen de c\u00e1mara
     _xt = personajes[personajeActual].posicion.x;
     _yt = personajes[personajeActual].posicion.y;
-    tracker.x = map( _xt, 0, 550, width, -width );
+    tracker.x = constrain( map( _xt, 0, 500, width, -width ), -1024, 1024);
     tracker.y = map( _yt, 0, height, 0, 10 );
   } else {
     _xt = mouseX;
@@ -194,7 +204,7 @@ public void draw() {
       estadoApp = 2;
       iniciar = true;
     }
-  } 
+  }
   else if( estadoApp == 2 ) {
     // Escenario: Esperando
     // Si detecta un usuario, enciende la aplicaci\u00f3n
@@ -215,6 +225,11 @@ public void draw() {
       // Escenario
       escenarios[escenarioActual].dibujar();
       
+      if( escenarioActual == 0 ){
+        ojo1.x = PApplet.parseInt( escenarios[0].objetos[0].x - 330 );
+        ojo1.update(mouseX, mouseY);
+        ojo1.display();
+      }
       if ( kinect ) {
         // Detectar jugadores
         int [] userList = context.getUsers();
@@ -232,11 +247,13 @@ public void draw() {
 
             // Dibujar
             pushMatrix();
-            translate( 0, personajes[personajeActual].posicion.y );
+            translate( 0, personajes[personajeActual].posicion.y-90 );
             //drawSkeleton( userList[i] );
             dibujarCuerpo( userList[i] );
             dibujarCabeza( userList[i] );
+            translate( -20, -20 );
             dibujarManoIzquierda( userList[i] );
+            translate( 40, 0 );
             dibujarManoDerecha( userList[i] );
             popMatrix();
 
@@ -258,7 +275,20 @@ public void draw() {
       escenarios[escenarioActual].apagar();
     }
 
-  }
+  } else if( estadoApp == 3 ){
+    // Loop
+    pushStyle();
+    imageMode(CORNER);
+    cofre.read();
+    image(cofre, 0, 0);
+    popStyle();
+    float md = cofre.duration();
+    float mt = cofre.time();
+    if (mt >= md) {
+      estadoApp = 2;
+      iniciar = true;
+    }
+  } 
 
   // Im\u00e1gen de c\u00e1mara
   if ( debugCamera && kinect ) {
@@ -350,6 +380,29 @@ class Escenario {
     }
   }
 }
+class Eye {
+  int x, y;
+  int size;
+  float angle = 0.0f;
+  
+  Eye(int tx, int ty, int ts) {
+    x = tx;
+    y = ty;
+    size = ts;
+ }
+
+  public void update(int mx, int my) {
+    angle = atan2(my-y, mx-x);
+  }
+  
+  public void display() {
+    pushMatrix();
+    translate(x, y);
+    rotate(angle);
+    image(ojo, 0, 0, size, size);
+    popMatrix();
+  }
+}
 public void drawSkeleton(int userId) {
   pushStyle();
   stroke(0, 0, 255);
@@ -392,7 +445,7 @@ public void dibujarCuerpo( int userId ) {
   // Dibujar
   if( userId == 1 ){
     image(p1cuerpo, cuerpo_2d.x, cuerpo_2d.y);
-  }  else if ( userId == 2 ){
+  }  else {
     image(p2cuerpo, cuerpo_2d.x, cuerpo_2d.y);
   }
 }
@@ -414,14 +467,14 @@ public void dibujarCabeza( int userId ) {
   // Dibujar
   if( userId == 1 ){
     //image(p1cabeza, cabeza_2d.x, cabeza_2d.y, distanceScalar*headsize, distanceScalar*headsize );
-    image(p1cabeza, cabeza_2d.x, cabeza_2d.y-30 );
-  }  else if ( userId == 2 ){
+    image(p1cabeza, cabeza_2d.x, cabeza_2d.y-70 );
+  }  else {
     //image(p2cabeza, cabeza_2d.x, cabeza_2d.y, distanceScalar*headsize, distanceScalar*headsize );
-    image(p2cabeza, cabeza_2d.x, cabeza_2d.y-30 );
+    image(p2cabeza, cabeza_2d.x, cabeza_2d.y-50 );
   }
   // Si est\u00e1 la llave activa
   if( pasarNivel ){
-    image(llavePrendida, cabeza_2d.x, p2cabeza.height-llavePrendida.height);
+    image(llavePrendida, cabeza_2d.x, p2cabeza.height-llavePrendida.height*2);
   }
 }
 
@@ -439,7 +492,7 @@ public void dibujarManoIzquierda( int userId ) {
   // Dibujar
   if( userId == 1 ){
     image(p1manoi, manoIzquierda_2d.x, manoIzquierda_2d.y);
-  }  else if ( userId == 2 ){
+  }  else {
     image(p2manoi, manoIzquierda_2d.x, manoIzquierda_2d.y);
   }
 }
@@ -457,7 +510,7 @@ public void dibujarManoDerecha( int userId ) {
   // Dibujar
   if( userId == 1 ){
     image(p1manoi, manoDerecha_2d.x, manoDerecha_2d.y);
-  }  else if ( userId == 2 ){
+  }  else {
     image(p2manoi, manoDerecha_2d.x, manoDerecha_2d.y);
   }
 }
@@ -496,6 +549,7 @@ public void onVisibleUser(SimpleOpenNI curContext, int userId) {
 class Objeto {
 
   //.h
+  int universo; // Universo
   PVector posicion; // Posici\u00f3n X, Y, Z
   float x, y; // Posiciones absolutas
   int w, h; // Ancho y Alto
@@ -508,9 +562,11 @@ class Objeto {
   int sonido; // Contador de frames
   OscMessage _audio;
   int timer;
+  int k;
 
   // Constructor
-  Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special, int _sonido) {
+  Objeto ( int _universo, float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special, int _sonido) {
+    universo = _universo;
     posicion = new PVector( _x, _y, _z );
     w = _w;
     h = _h;
@@ -523,13 +579,14 @@ class Objeto {
     framesSpecial = _special;
     frame = 0;
     timer = 0;
+    k=1;
 
     // Imagen
     // loadImages( String nombre, String extensi\u00f3n, int cantidad_de_frames );
-    reposo = loadImages(escenarios[escenarioActual].name+"/"+name+"/reposo_", ".png", _reposo);
-    hover = loadImages(escenarios[escenarioActual].name+"/"+name+"/hover_", ".png", _hover);
-    playing = loadImages(escenarios[escenarioActual].name+"/"+name+"/playing_", ".png", _playing);
-    special = loadImages(escenarios[escenarioActual].name+"/"+name+"/special_", ".png", _special);
+    reposo = loadImages(escenarios[universo].name+"/"+name+"/reposo_", ".png", _reposo);
+    hover = loadImages(escenarios[universo].name+"/"+name+"/hover_", ".png", _hover);
+    playing = loadImages(escenarios[universo].name+"/"+name+"/playing_", ".png", _playing);
+    special = loadImages(escenarios[universo].name+"/"+name+"/special_", ".png", _special);
 
     // Audio
     sonido = _sonido;
@@ -539,8 +596,20 @@ class Objeto {
 
   // Actualizar
   public void update() {
-    x = width/2+posicion.x+tracker.x*posicion.z;
+    x = width/2+posicion.x+tracker.x*posicion.z; 
     y = height/2+posicion.y;
+
+    if( name == "peces" ){
+      x = width/2+posicion.x+k+tracker.x*posicion.z;
+    }
+    if( name == "nubes" ){
+      x = width/2+posicion.x+k*0.1f+tracker.x*posicion.z;
+    }
+    if( k > 1500 ){
+      k = -1500;
+    } else {
+      k += random(0,10);
+    }
 
     dibujar();
 
@@ -613,8 +682,30 @@ class Objeto {
       // Si es la puerta y tenes la llave
       if( name == "puerta" && pasarNivel == true ){
         println("Pasaste de nivel");
-        // Cambiar estado
-        escenarioActual = 0;
+        if( escenarioActual == 1 ){
+          pasarNivel = false;
+          escenarioActual = 2; 
+        }
+        estado = "encendiendo";
+      }
+
+
+      // Si es el dragon y suena la cajita
+      if( name == "llaveSotano" ){
+        pasarNivel = true;
+      }
+
+      // Si es el cofre y tenes la llave
+      if( name == "cofre" && pasarNivel == true ){
+        // Pasajes de universos
+        if( escenarioActual == 0 ){ 
+          // Si detecta a un personaje, cambia la secuencia
+          pasarNivel = false;
+          escenarioActual = 1;
+          estadoApp = 3;
+          cofre.jump(0);
+          cofre.play();
+        }
         estado = "encendiendo";
       }
 
@@ -709,7 +800,7 @@ public PImage [] loadImages(String name, String extension, int frames) {
   return images;
 }
   static public void main(String[] passedArgs) {
-    String[] appletArgs = new String[] { "--full-screen", "--bgcolor=#FFFFFF", "--hide-stop", "build" };
+    String[] appletArgs = new String[] { "--full-screen", "--bgcolor=#171616", "--stop-color=#cccccc", "build" };
     if (passedArgs != null) {
       PApplet.main(concat(appletArgs, passedArgs));
     } else {

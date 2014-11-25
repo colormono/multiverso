@@ -11,34 +11,34 @@ import processing.video.*;
 import oscP5.*;
 import netP5.*;
 
-// Objetos
+// Objetos y controles
 Personaje personajes[]; // Personajes
 Escenario escenarios[]; // Escenarios
 Objeto objetos[]; // Objetos
 OscP5 oscP5; // Objeto OSC
 NetAddress direccionRemota; // Dirección remota
-int puerto; // Puerto de salida OSC 
-
+int puerto; // Puerto de salida OSC
 boolean llave = false; // Llave para pasar de nivel
 boolean pasarNivel = false; // Llave para pasar de nivel
+int frame = 0;
+int timer = 0;
 
 // Configuración
 boolean debug = false; // Debug
 boolean debugCamera = false; // Debug Camara
 boolean kinect = true; // Using kinect
 PVector tracker; // Tracking
-int estadoApp = 2; // Arrancar desde la intro
-int personajeActual = 0; // Personaje inicial
-int escenarioActual = 1; // Escenario inicial
+int estadoApp = 0; // Arrancar desde la intro (LoopIntro=0, 1=Video, 2=Nivel, 3=VideoLlave)
+int personajeActual = 0; // Personaje inicial (Pepe = 0)
+int escenarioActual = 0; // Escenario inicial (Sotano = 0)
 boolean iniciar = false; // Botón para iniciar (temporal)
-int frame = 0;
-int timer = 0;
 
-// Imagenes
+// Imagenes y videos
 PImage p1cabeza, p1cuerpo, p1manod, p1manoi;
 PImage p2cabeza, p2cuerpo, p2manod, p2manoi;
-PImage llaveApagada, llavePrendida;
-Movie bucle, intro;
+PImage llaveApagada, llavePrendida, ojo;
+Movie bucle, intro, cofre;
+Eye ojo1;
 
 //---------------------------------------------------------------
 
@@ -65,42 +65,52 @@ void setup() {
   p2cuerpo = loadImage("personajes/p2-cuerpo.png");
   p2manod = loadImage("personajes/p2-mano-d.png");
   p2manoi = loadImage("personajes/p2-mano-i.png");
+  ojo = loadImage("sotano/ojo.png");
 
   // Llaves
   llaveApagada = loadImage("ui/llaveOFF.png");
   llavePrendida = loadImage("ui/llaveON.png");
 
-  // Intro
+  // Videos
   bucle = new Movie(this, "intro/loop.mov");
   intro = new Movie(this, "intro/intro.mov");
+  cofre = new Movie(this, "intro/cofre.mov");
   bucle.loop();
 
   // Crear Universos de Objetos
-  // Objeto ( float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special, int _sonido );
+  // Objeto ( int _universo, float _x, float _y, float _z, int _w, int _h, boolean _interactive, String _name, int _reposo, int _hover, int _playing, int _special, int _sonido );
   escenarios = new Escenario[0];
 
   // Escenario: Sótano
   Escenario e1 = new Escenario( "sotano" );
   escenarios = (Escenario[]) append(escenarios, e1);
-  //escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0 ));
+  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, 0, 0, 0.1, 1365, 768, false, "fondo", 1, 0, 0, 0, 0 ));
+  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, -400, 200, 0.2, 200, 200, true, "cofre", 1, 23, 0, 0, 0 ));
+  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, 300, 0, 0.1, 215, 491, true, "llaveSotano", 1, 1, 0, 0, 0 ));
+  ojo1 = new Eye( 100,  180, 40);
 
   // Escenario: Montaña
   Escenario e2 = new Escenario( "montana" );
   escenarios = (Escenario[]) append(escenarios, e2);
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, -125, 0.1, 1068, 119, false, "nubes", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, 100, 0.2, 1498, 269, false, "montanas", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 0, 270, 0.4, 2048, 281, false, "piso", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( -400, 120, 0.5, 533, 233, true, "dragon", 50, 25, 25, 25, 4 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 400, 0, 0.3, 102, 60, true, "peces", 24, 24, 0, 0, 2 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( -500, -100, 0.3, 205, 120, true, "peces", 24, 24, 0, 0, 2 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 900, 200, 0.6, 168, 246, true, "hueco", 1, 50, 0, 0, 8 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 300, 180, 0.8, 400, 600, true, "puerta", 1, 24, 0, 24, 5 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( -1024, 300, 0.9, 300, 300, true, "flor", 1, 128, 0, 0, 9 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, -125, 0.05, 1365, 527, false, "cielo", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, -125, 0.1, 1068, 119, false, "nubes", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, 100, 0.2, 1498, 269, false, "montanas", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, 270, 0.4, 2048, 281, false, "piso", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, -400, 120, 0.5, 533, 233, true, "dragon", 50, 46, 0, 25, 4 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 400, 0, 0.3, 102, 60, true, "peces", 24, 24, 0, 0, 2 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, -500, -100, 0.3, 205, 120, true, "peces", 24, 24, 0, 0, 2 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 700, 200, 0.6, 168, 246, true, "hueco", 1, 89, 0, 0, 8 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 350, 140, 0.8, 300, 450, true, "puerta", 1, 24, 0, 24, 5 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, -500, 160, 0.9, 200, 200, true, "flor", 1, 32, 0, 0, 9 ));
   // Iniciar sonido ambiente
   OscMessage _audio = new OscMessage("/audio");
   _audio.add(1);
   oscP5.send(_audio, direccionRemota);
+
+  // Escenario: Street Fighter
+  Escenario e3 = new Escenario( "fighter" );
+  escenarios = (Escenario[]) append(escenarios, e3);
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, 0, 0, 0.2, 2600, 768, false, "fondo", 1, 0, 0, 0, 0 ));
 
 
   // Si se está utilizando la Kinect
@@ -142,7 +152,7 @@ void draw() {
     context.update(); // Actualizar imagen de cámara
     _xt = personajes[personajeActual].posicion.x;
     _yt = personajes[personajeActual].posicion.y;
-    tracker.x = map( _xt, 0, 550, width, -width );
+    tracker.x = constrain( map( _xt, 0, 500, width, -width ), -1024, 1024);
     tracker.y = map( _yt, 0, height, 0, 10 );
   } else {
     _xt = mouseX;
@@ -173,7 +183,7 @@ void draw() {
       estadoApp = 2;
       iniciar = true;
     }
-  } 
+  }
   else if( estadoApp == 2 ) {
     // Escenario: Esperando
     // Si detecta un usuario, enciende la aplicación
@@ -194,6 +204,11 @@ void draw() {
       // Escenario
       escenarios[escenarioActual].dibujar();
       
+      if( escenarioActual == 0 ){
+        ojo1.x = int( escenarios[0].objetos[0].x - 330 );
+        ojo1.update(mouseX, mouseY);
+        ojo1.display();
+      }
       if ( kinect ) {
         // Detectar jugadores
         int [] userList = context.getUsers();
@@ -211,11 +226,13 @@ void draw() {
 
             // Dibujar
             pushMatrix();
-            translate( 0, personajes[personajeActual].posicion.y );
+            translate( 0, personajes[personajeActual].posicion.y-90 );
             //drawSkeleton( userList[i] );
             dibujarCuerpo( userList[i] );
             dibujarCabeza( userList[i] );
+            translate( -20, -20 );
             dibujarManoIzquierda( userList[i] );
+            translate( 40, 0 );
             dibujarManoDerecha( userList[i] );
             popMatrix();
 
@@ -237,7 +254,20 @@ void draw() {
       escenarios[escenarioActual].apagar();
     }
 
-  }
+  } else if( estadoApp == 3 ){
+    // Loop
+    pushStyle();
+    imageMode(CORNER);
+    cofre.read();
+    image(cofre, 0, 0);
+    popStyle();
+    float md = cofre.duration();
+    float mt = cofre.time();
+    if (mt >= md) {
+      estadoApp = 2;
+      iniciar = true;
+    }
+  } 
 
   // Imágen de cámara
   if ( debugCamera && kinect ) {

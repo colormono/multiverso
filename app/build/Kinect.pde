@@ -40,7 +40,7 @@ void dibujarCuerpo( int userId ) {
   // Dibujar
   if( userId == 1 ){
     image(p1cuerpo, cuerpo_2d.x, cuerpo_2d.y);
-  }  else if ( userId == 2 ){
+  }  else {
     image(p2cuerpo, cuerpo_2d.x, cuerpo_2d.y);
   }
 }
@@ -62,10 +62,10 @@ void dibujarCabeza( int userId ) {
   // Dibujar
   if( userId == 1 ){
     //image(p1cabeza, cabeza_2d.x, cabeza_2d.y, distanceScalar*headsize, distanceScalar*headsize );
-    image(p1cabeza, cabeza_2d.x, cabeza_2d.y-30 );
-  }  else if ( userId == 2 ){
+    image(p1cabeza, cabeza_2d.x, cabeza_2d.y-70 );
+  }  else {
     //image(p2cabeza, cabeza_2d.x, cabeza_2d.y, distanceScalar*headsize, distanceScalar*headsize );
-    image(p2cabeza, cabeza_2d.x, cabeza_2d.y-30 );
+    image(p2cabeza, cabeza_2d.x, cabeza_2d.y-50 );
   }
   // Si está la llave activa
   if( pasarNivel ){
@@ -87,7 +87,7 @@ void dibujarManoIzquierda( int userId ) {
   // Dibujar
   if( userId == 1 ){
     image(p1manoi, manoIzquierda_2d.x, manoIzquierda_2d.y);
-  }  else if ( userId == 2 ){
+  }  else {
     image(p2manoi, manoIzquierda_2d.x, manoIzquierda_2d.y);
   }
 }
@@ -105,7 +105,7 @@ void dibujarManoDerecha( int userId ) {
   // Dibujar
   if( userId == 1 ){
     image(p1manoi, manoDerecha_2d.x, manoDerecha_2d.y);
-  }  else if ( userId == 2 ){
+  }  else {
     image(p2manoi, manoDerecha_2d.x, manoDerecha_2d.y);
   }
 }
