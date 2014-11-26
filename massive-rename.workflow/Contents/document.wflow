@@ -52,25 +52,51 @@
 				<dict>
 					<key>fileNames</key>
 					<array>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00000.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00001.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00002.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00003.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00004.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00005.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00006.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00007.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00008.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00009.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00010.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00011.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00012.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00013.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00014.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00015.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00016.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00017.png</string>
-						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/montana/hueco/hover_00018.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00000.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00001.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00002.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00003.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00004.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00005.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00006.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00007.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00008.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00009.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00010.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00011.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00012.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00013.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00014.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00015.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00016.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00017.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00018.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00019.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00020.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00021.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00022.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00023.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00024.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00025.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00026.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00027.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00028.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00029.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00030.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00031.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00032.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00033.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00034.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00035.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00036.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00037.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00038.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00039.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00040.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00041.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00042.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00043.png</string>
+						<string>~/Documents/Areas/IUNA/AV2/TP0-Anual/multiverso/app/build/data/conejo/Comp 2_1_00044.png</string>
 					</array>
 				</dict>
 				<key>BundleIdentifier</key>
@@ -165,9 +191,7 @@
 					<key>defaultName</key>
 					<dict>
 						<key>tokenizedValue</key>
-						<array>
-							<string>ghover</string>
-						</array>
+						<array/>
 					</dict>
 					<key>ignoreCase</key>
 					<dict/>
@@ -238,7 +262,7 @@
 					<key>dateToUse</key>
 					<integer>0</integer>
 					<key>defaultName</key>
-					<string>ghover</string>
+					<string></string>
 					<key>ignoreCase</key>
 					<true/>
 					<key>includeExtensions</key>
@@ -254,7 +278,7 @@
 					<key>numberLocation</key>
 					<integer>0</integer>
 					<key>numberSeparator</key>
-					<integer>3</integer>
+					<integer>4</integer>
 					<key>renameItems</key>
 					<integer>1</integer>
 					<key>renameType</key>
@@ -617,7 +641,7 @@
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>932CF624-BC84-4906-9546-AEA6F57CF226</key>
+		<key>A0D51DB8-5741-4C53-A292-003273088D19</key>
 		<dict>
 			<key>from</key>
 			<string>92B65207-7F93-450E-BBE0-952B0B8B5026 - 92B65207-7F93-450E-BBE0-952B0B8B5026</string>

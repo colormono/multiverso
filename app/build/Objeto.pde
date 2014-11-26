@@ -135,6 +135,11 @@ class Objeto {
 
       // Si es la puerta y tenes la llave
       else if( name == "puerta" && pasarNivel == true ){
+        estado = "special";
+      }
+
+      // Si es el porton y tenes la llave
+      else if( name == "porton" ){
         if( escenarioActual == 1 ){
           pasarNivel = false;
           escenarioActual = 2; 
@@ -164,6 +169,15 @@ class Objeto {
           cofre.play();
         }
         estado = "encendiendo";
+      }
+
+      // Si es el portal
+      else if( name == "portal" ){
+        pasarNivel = false;
+        escenarioActual = 0;
+        estadoApp = 4;
+        cierre.jump(0);
+        cierre.play();
       }
 
       // Si no pasa nada de esto
@@ -196,10 +210,18 @@ class Objeto {
       } else {
         frame = 0;
         image(special[frame], 0, 0, w, h);
-        
+
         // Si es el dragon, suena la cajita, y no tiene agarro la llave
-        if( name == "dragon" && pasarNivel == false){
+        if( name == "dragon" && pasarNivel == false ){
           pasarNivel = true;
+        }
+
+        // Si es el dragon, suena la cajita, y no tiene agarro la llave
+        if( name == "puerta" && pasarNivel == true ){
+          pasarNivel = false;
+          llave = false;
+          escenarioActual = 3;
+          estado = "encendiendo";
         }
       }
     }

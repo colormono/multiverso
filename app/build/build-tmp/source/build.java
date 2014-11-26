@@ -20,12 +20,14 @@ import java.io.IOException;
 public class build extends PApplet {
 
 // MULTIVERSO
-// App v04: Animaciones al pasar sobre
+// App v05: Contenidos e interacciones
 //---------------------------------------------------------------
 
 // Kinect
 
 SimpleOpenNI context;
+
+// Video
 
 
 // OSC
@@ -43,13 +45,14 @@ boolean llave = false; // Llave para pasar de nivel
 boolean pasarNivel = false; // Llave para pasar de nivel
 int frame = 0;
 int timer = 0;
+int timerCreditos = 800;
 
 // Configuraci\u00f3n
 boolean debug = false; // Debug
 boolean debugCamera = false; // Debug Camara
 boolean kinect = false; // Using kinect
 PVector tracker; // Tracking
-int estadoApp = 2; // Arrancar desde la intro (LoopIntro=0, 1=Video, 2=Nivel, 3=VideoLlave)
+int estadoApp = 2; // Arrancar desde la intro (LoopIntro=0, 1=Video, 2=Nivel, 3=VideoLlave, 4=VideoCierre)
 int personajeActual = 0; // Personaje inicial (Pepe = 0)
 int escenarioActual = 0; // Escenario inicial (Sotano = 0)
 boolean iniciar = false; // Bot\u00f3n para iniciar (temporal)
@@ -57,8 +60,8 @@ boolean iniciar = false; // Bot\u00f3n para iniciar (temporal)
 // Imagenes y videos
 PImage p1cabeza, p1cuerpo, p1manod, p1manoi;
 PImage p2cabeza, p2cuerpo, p2manod, p2manoi;
-PImage llaveApagada, llavePrendida, ojo;
-Movie bucle, intro, cofre;
+PImage llaveApagada, llavePrendida, ojo, creditos;
+Movie bucle, intro, cofre, cierre;
 Eye ojo1;
 
 //---------------------------------------------------------------
@@ -78,6 +81,7 @@ public void setup() {
   personajes = new Personaje[0];
   Personaje p1 = new Personaje( 0, 500, mouseY, 235, 240, true, "pepe" );
   personajes = (Personaje[]) append(personajes, p1);
+
   p1cabeza = loadImage("personajes/p1-cabeza.png");
   p1cuerpo = loadImage("personajes/p1-cuerpo.png");
   p1manod = loadImage("personajes/p1-mano-d.png");
@@ -87,6 +91,7 @@ public void setup() {
   p2manod = loadImage("personajes/p2-mano-d.png");
   p2manoi = loadImage("personajes/p2-mano-i.png");
   ojo = loadImage("sotano/ojo.png");
+  creditos = loadImage("ui/creditos.png");
 
   // Llaves
   llaveApagada = loadImage("ui/llaveOFF.png");
@@ -96,6 +101,7 @@ public void setup() {
   bucle = new Movie(this, "intro/loop.mov");
   intro = new Movie(this, "intro/intro.mov");
   cofre = new Movie(this, "intro/cofre.mov");
+  cierre = new Movie(this, "intro/cierre.mov");
   bucle.loop();
 
   // Crear Universos de Objetos
@@ -107,32 +113,38 @@ public void setup() {
   escenarios = (Escenario[]) append(escenarios, e1);
   escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, 0, 0, 0.2f, 1365, 768, false, "fondo", 1, 0, 0, 0, 0 ));
   escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, -400, 200, 0.2f, 200, 200, true, "cofre", 1, 23, 0, 0, 0 ));
-  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, 600, 0, 0.2f, 215, 491, true, "llaveSotano", 1, 1, 0, 1, 0 ));
+  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, 400, 0, 0.2f, 215, 491, true, "llaveSotano", 1, 1, 0, 1, 0 ));
   ojo1 = new Eye( 100,  180, 40);
 
-  // Escenario: Monta\u00f1a
-  Escenario e2 = new Escenario( "montana" );
+  // Escenario: Puertas
+  Escenario e2 = new Escenario( "fighter" );
   escenarios = (Escenario[]) append(escenarios, e2);
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, -125, 0.05f, 1365, 527, false, "cielo", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, -125, 0.1f, 1068, 119, false, "nubes", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, 100, 0.2f, 1498, 269, false, "montanas", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, 270, 0.4f, 2048, 281, false, "piso", 1, 0, 0, 0, 0 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, -400, 120, 0.5f, 533, 233, true, "dragon", 50, 46, 0, 25, 4 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 400, 0, 0.3f, 102, 60, true, "peces", 24, 24, 0, 0, 2 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, -500, -100, 0.3f, 205, 120, true, "peces", 24, 24, 0, 0, 2 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 700, 200, 0.9f, 168, 246, true, "hueco", 1, 89, 0, 0, 8 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 350, 140, 0.8f, 300, 450, true, "puerta", 1, 24, 0, 24, 5 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, 200, 0.9f, 200, 200, true, "flor", 1, 32, 0, 0, 9 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, 0, 0.2f, 1498, 768, false, "fondo", 1, 0, 0, 0, 0 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 350, 140, 0.8f, 300, 450, true, "porton", 1, 24, 0, 24, 5 ));
+
+  // Escenario: Monta\u00f1a
+  Escenario e3 = new Escenario( "montana" );
+  escenarios = (Escenario[]) append(escenarios, e3);
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, 0, -125, 0.05f, 1365, 527, false, "cielo", 1, 0, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, 0, -125, 0.1f, 1068, 119, false, "nubes", 1, 0, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, 0, 100, 0.2f, 1498, 269, false, "montanas", 1, 0, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, 0, 270, 0.4f, 2048, 281, false, "piso", 1, 0, 0, 0, 0 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, -400, 120, 0.5f, 533, 233, true, "dragon", 50, 46, 0, 25, 4 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, 400, 0, 0.3f, 102, 60, true, "peces", 24, 24, 0, 0, 2 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, -500, -100, 0.3f, 205, 120, true, "peces", 24, 24, 0, 0, 2 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, 700, 200, 0.9f, 168, 246, true, "hueco", 1, 89, 0, 0, 8 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, 350, 140, 0.8f, 300, 450, true, "puerta", 1, 24, 0, 24, 5 ));
+  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, 0, 200, 0.9f, 200, 200, true, "flor", 1, 32, 0, 0, 9 ));
   // Iniciar sonido ambiente
   OscMessage _audio = new OscMessage("/audio");
   _audio.add(1);
   oscP5.send(_audio, direccionRemota);
 
-  // Escenario: Street Fighter
-  Escenario e3 = new Escenario( "fighter" );
-  escenarios = (Escenario[]) append(escenarios, e3);
-  escenarios[2].objetos = (Objeto[]) append(escenarios[2].objetos, new Objeto( 2, 0, 0, 0.2f, 2600, 768, false, "fondo", 1, 0, 0, 0, 0 ));
-
+  // Escenario: Bosque
+  Escenario e4 = new Escenario( "bosque" );
+  escenarios = (Escenario[]) append(escenarios, e4);
+  escenarios[3].objetos = (Objeto[]) append(escenarios[3].objetos, new Objeto( 3, 0, 0, 0.2f, 1498, 768, false, "fondo", 1, 0, 0, 0, 0 ));
+  escenarios[3].objetos = (Objeto[]) append(escenarios[3].objetos, new Objeto( 3, -125, 140, 0.8f, 300, 450, true, "portal", 1, 24, 0, 24, 5 ));
 
   // Si se est\u00e1 utilizando la Kinect
   if ( kinect ) {
@@ -277,7 +289,7 @@ public void draw() {
     }
 
   } else if( estadoApp == 3 ){
-    // Loop
+    // Video cuando abren el cofre
     pushStyle();
     imageMode(CORNER);
     cofre.read();
@@ -288,6 +300,30 @@ public void draw() {
     if (mt >= md) {
       estadoApp = 2;
       iniciar = true;
+    }
+  } else if( estadoApp == 4 ){
+    // Video de salida
+    pushStyle();
+    imageMode(CORNER);
+    cierre.read();
+    image(cierre, 0, 0);
+    popStyle();
+    float md = cierre.duration();
+    float mt = cierre.time();
+    if (mt >= md) {
+      estadoApp = 5;
+      iniciar = false;
+      timerCreditos = 800;
+    }
+  } else if( estadoApp == 5 ){
+    // Placa de cierre
+    pushStyle();
+    imageMode(CORNER);
+    image(creditos, 0, 0);
+    popStyle();
+    timerCreditos --;
+    if (timerCreditos <= 1) {
+      estadoApp = 0;
     }
   } 
 
@@ -684,6 +720,11 @@ class Objeto {
 
       // Si es la puerta y tenes la llave
       else if( name == "puerta" && pasarNivel == true ){
+        estado = "special";
+      }
+
+      // Si es el porton y tenes la llave
+      else if( name == "porton" ){
         if( escenarioActual == 1 ){
           pasarNivel = false;
           escenarioActual = 2; 
@@ -713,6 +754,15 @@ class Objeto {
           cofre.play();
         }
         estado = "encendiendo";
+      }
+
+      // Si es el portal
+      else if( name == "portal" ){
+        pasarNivel = false;
+        escenarioActual = 0;
+        estadoApp = 4;
+        cierre.jump(0);
+        cierre.play();
       }
 
       // Si no pasa nada de esto
@@ -745,10 +795,18 @@ class Objeto {
       } else {
         frame = 0;
         image(special[frame], 0, 0, w, h);
-        
+
         // Si es el dragon, suena la cajita, y no tiene agarro la llave
-        if( name == "dragon" && pasarNivel == false){
+        if( name == "dragon" && pasarNivel == false ){
           pasarNivel = true;
+        }
+
+        // Si es el dragon, suena la cajita, y no tiene agarro la llave
+        if( name == "puerta" && pasarNivel == true ){
+          pasarNivel = false;
+          llave = false;
+          escenarioActual = 3;
+          estado = "encendiendo";
         }
       }
     }
