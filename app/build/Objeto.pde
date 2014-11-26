@@ -60,7 +60,7 @@ class Objeto {
     if( k > 1500 ){
       k = -1500;
     } else {
-      k += random(0,10);
+      k += random(0,2);
     }
 
     dibujar();
@@ -101,7 +101,11 @@ class Objeto {
     //translate(x, y, tracker.y); // 3D
 
     if( estado.equals("reposo") ){
-      if( frame < framesReposo ){
+      // Si es el perchero con la llave
+      if( name == "llaveSotano" && pasarNivel == true ){
+        estado = "special";
+      }
+      else if( frame < framesReposo ){
         image(reposo[frame], 0, 0, w, h);
         if( millis()-timer >= 100 ){          
           frame ++;
@@ -118,22 +122,19 @@ class Objeto {
       // Disparar sonido
       oscP5.send(_audio, direccionRemota);
 
-      // Si es la cajita musical
-      if( name == "hueco" ){
+      // Si es la cajita musical y no tiene la llave
+      if( name == "hueco" && llave == false ){
         llave = true;
-      }
-
-      // Si es el dragon y suena la cajita
-      if( name == "dragon" && llave == true ){
-        estado = "special";
-        pasarNivel = true;
-      } else {
         estado = "hover";
       }
 
+      // Si es el dragon y suena la cajita
+      else if( name == "dragon" && llave == true && pasarNivel == false ){
+        estado = "special";
+      }
+
       // Si es la puerta y tenes la llave
-      if( name == "puerta" && pasarNivel == true ){
-        println("Pasaste de nivel");
+      else if( name == "puerta" && pasarNivel == true ){
         if( escenarioActual == 1 ){
           pasarNivel = false;
           escenarioActual = 2; 
@@ -141,14 +142,18 @@ class Objeto {
         estado = "encendiendo";
       }
 
-
-      // Si es el dragon y suena la cajita
-      if( name == "llaveSotano" ){
+      // Si es el perchero sin la llave
+      else if( name == "llaveSotano" && pasarNivel == false ){
         pasarNivel = true;
       }
 
+      // Si es el perchero con la llave
+      else if( name == "llaveSotano" && pasarNivel == true ){
+        estado = "special";
+      }
+
       // Si es el cofre y tenes la llave
-      if( name == "cofre" && pasarNivel == true ){
+      else if( name == "cofre" && pasarNivel == true ){
         // Pasajes de universos
         if( escenarioActual == 0 ){ 
           // Si detecta a un personaje, cambia la secuencia
@@ -159,6 +164,11 @@ class Objeto {
           cofre.play();
         }
         estado = "encendiendo";
+      }
+
+      // Si no pasa nada de esto
+      else {
+        estado = "hover";
       }
 
     }
@@ -186,6 +196,11 @@ class Objeto {
       } else {
         frame = 0;
         image(special[frame], 0, 0, w, h);
+        
+        // Si es el dragon, suena la cajita, y no tiene agarro la llave
+        if( name == "dragon" && pasarNivel == false){
+          pasarNivel = true;
+        }
       }
     }
 

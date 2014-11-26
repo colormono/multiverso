@@ -47,9 +47,9 @@ int timer = 0;
 // Configuraci\u00f3n
 boolean debug = false; // Debug
 boolean debugCamera = false; // Debug Camara
-boolean kinect = true; // Using kinect
+boolean kinect = false; // Using kinect
 PVector tracker; // Tracking
-int estadoApp = 0; // Arrancar desde la intro (LoopIntro=0, 1=Video, 2=Nivel, 3=VideoLlave)
+int estadoApp = 2; // Arrancar desde la intro (LoopIntro=0, 1=Video, 2=Nivel, 3=VideoLlave)
 int personajeActual = 0; // Personaje inicial (Pepe = 0)
 int escenarioActual = 0; // Escenario inicial (Sotano = 0)
 boolean iniciar = false; // Bot\u00f3n para iniciar (temporal)
@@ -105,9 +105,9 @@ public void setup() {
   // Escenario: S\u00f3tano
   Escenario e1 = new Escenario( "sotano" );
   escenarios = (Escenario[]) append(escenarios, e1);
-  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, 0, 0, 0.1f, 1365, 768, false, "fondo", 1, 0, 0, 0, 0 ));
+  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, 0, 0, 0.2f, 1365, 768, false, "fondo", 1, 0, 0, 0, 0 ));
   escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, -400, 200, 0.2f, 200, 200, true, "cofre", 1, 23, 0, 0, 0 ));
-  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, 300, 0, 0.1f, 215, 491, true, "llaveSotano", 1, 1, 0, 0, 0 ));
+  escenarios[0].objetos = (Objeto[]) append(escenarios[0].objetos, new Objeto( 0, 600, 0, 0.2f, 215, 491, true, "llaveSotano", 1, 1, 0, 1, 0 ));
   ojo1 = new Eye( 100,  180, 40);
 
   // Escenario: Monta\u00f1a
@@ -120,9 +120,9 @@ public void setup() {
   escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, -400, 120, 0.5f, 533, 233, true, "dragon", 50, 46, 0, 25, 4 ));
   escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 400, 0, 0.3f, 102, 60, true, "peces", 24, 24, 0, 0, 2 ));
   escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, -500, -100, 0.3f, 205, 120, true, "peces", 24, 24, 0, 0, 2 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 700, 200, 0.6f, 168, 246, true, "hueco", 1, 89, 0, 0, 8 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 700, 200, 0.9f, 168, 246, true, "hueco", 1, 89, 0, 0, 8 ));
   escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 350, 140, 0.8f, 300, 450, true, "puerta", 1, 24, 0, 24, 5 ));
-  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, -500, 160, 0.9f, 200, 200, true, "flor", 1, 32, 0, 0, 9 ));
+  escenarios[1].objetos = (Objeto[]) append(escenarios[1].objetos, new Objeto( 1, 0, 200, 0.9f, 200, 200, true, "flor", 1, 32, 0, 0, 9 ));
   // Iniciar sonido ambiente
   OscMessage _audio = new OscMessage("/audio");
   _audio.add(1);
@@ -173,12 +173,13 @@ public void draw() {
     context.update(); // Actualizar imagen de c\u00e1mara
     _xt = personajes[personajeActual].posicion.x;
     _yt = personajes[personajeActual].posicion.y;
-    tracker.x = constrain( map( _xt, 0, 500, width, -width ), -1024, 1024);
+    tracker.x = constrain( map( _xt, 0, 640, width/2, -width/2 ), -width/2, width/2);
     tracker.y = map( _yt, 0, height, 0, 10 );
+    println("_xt: "+_xt + "| .x: "+tracker.x);
   } else {
     _xt = mouseX;
     _yt = mouseY;
-    tracker.x = map( _xt, 0, width, width, -width );
+    tracker.x = map( _xt, 0, width, width/2, -width/2 );
     tracker.y = map( _yt, 0, height, 0, 10 );
   }
 
@@ -608,7 +609,7 @@ class Objeto {
     if( k > 1500 ){
       k = -1500;
     } else {
-      k += random(0,10);
+      k += random(0,2);
     }
 
     dibujar();
@@ -649,7 +650,11 @@ class Objeto {
     //translate(x, y, tracker.y); // 3D
 
     if( estado.equals("reposo") ){
-      if( frame < framesReposo ){
+      // Si es el perchero con la llave
+      if( name == "llaveSotano" && pasarNivel == true ){
+        estado = "special";
+      }
+      else if( frame < framesReposo ){
         image(reposo[frame], 0, 0, w, h);
         if( millis()-timer >= 100 ){          
           frame ++;
@@ -666,22 +671,19 @@ class Objeto {
       // Disparar sonido
       oscP5.send(_audio, direccionRemota);
 
-      // Si es la cajita musical
-      if( name == "hueco" ){
+      // Si es la cajita musical y no tiene la llave
+      if( name == "hueco" && llave == false ){
         llave = true;
-      }
-
-      // Si es el dragon y suena la cajita
-      if( name == "dragon" && llave == true ){
-        estado = "special";
-        pasarNivel = true;
-      } else {
         estado = "hover";
       }
 
+      // Si es el dragon y suena la cajita
+      else if( name == "dragon" && llave == true && pasarNivel == false ){
+        estado = "special";
+      }
+
       // Si es la puerta y tenes la llave
-      if( name == "puerta" && pasarNivel == true ){
-        println("Pasaste de nivel");
+      else if( name == "puerta" && pasarNivel == true ){
         if( escenarioActual == 1 ){
           pasarNivel = false;
           escenarioActual = 2; 
@@ -689,14 +691,18 @@ class Objeto {
         estado = "encendiendo";
       }
 
-
-      // Si es el dragon y suena la cajita
-      if( name == "llaveSotano" ){
+      // Si es el perchero sin la llave
+      else if( name == "llaveSotano" && pasarNivel == false ){
         pasarNivel = true;
       }
 
+      // Si es el perchero con la llave
+      else if( name == "llaveSotano" && pasarNivel == true ){
+        estado = "special";
+      }
+
       // Si es el cofre y tenes la llave
-      if( name == "cofre" && pasarNivel == true ){
+      else if( name == "cofre" && pasarNivel == true ){
         // Pasajes de universos
         if( escenarioActual == 0 ){ 
           // Si detecta a un personaje, cambia la secuencia
@@ -707,6 +713,11 @@ class Objeto {
           cofre.play();
         }
         estado = "encendiendo";
+      }
+
+      // Si no pasa nada de esto
+      else {
+        estado = "hover";
       }
 
     }
@@ -734,6 +745,11 @@ class Objeto {
       } else {
         frame = 0;
         image(special[frame], 0, 0, w, h);
+        
+        // Si es el dragon, suena la cajita, y no tiene agarro la llave
+        if( name == "dragon" && pasarNivel == false){
+          pasarNivel = true;
+        }
       }
     }
 
